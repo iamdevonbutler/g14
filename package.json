@@ -1,0 +1,14 @@
+{
+  "name": "g14",
+  "version": "0.1.0",
+  "description": "Simple browser notes",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jason Pescione <jpescione@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "gulp": "^3.9.0"
+  }
+}
