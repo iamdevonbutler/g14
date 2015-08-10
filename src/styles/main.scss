@@ -1,0 +1,24 @@
+@import "reset";
+
+body {
+  font-size: 100%;
+  font-family: "Times New Roman", serif;
+}
+
+#content {
+  font-size: 1em !important;
+  font-family: georgia, serif !important;
+  color: rgba(0,0,0,0.6) !important;
+  width: 50% !important;
+  padding: 50px 25% 0;
+  height: 100% !important;
+  position: fixed !important;
+  border: none !important;
+  margin: 0 !important;
+  box-shadow: none !important;
+  box-shadow: none !important;
+  border-radius: none !important;
+  focus-outline: none !important;
+  focus-box-shadow: none !important;
+  outline: none !important;
+}

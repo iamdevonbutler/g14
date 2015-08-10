@@ -8,7 +8,19 @@
   },
   "author": "Jason Pescione <jpescione@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "gulp": "^3.9.0"
+  "devDependencies": {
+    "gulp": "3.9.0",
+    "gulp-autoprefixer": "2.3.1",
+    "gulp-babel": "5.2.0",
+    "gulp-browserify": "0.5.1",
+    "gulp-clean": "0.3.1",
+    "gulp-concat": "2.6.0",
+    "gulp-connect": "2.2.0",
+    "gulp-embedlr": "0.5.2",
+    "gulp-minify-css": "1.2.0",
+    "gulp-sass": "2.0.4",
+    "gulp-uglify": "1.2.0",
+    "gulp-watch": "4.3.4",
+    "local-storage": "1.4.2"
   }
 }
