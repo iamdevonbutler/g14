@@ -1,4 +1,11 @@
 
+0.3.1 / 2015-08-11
+==================
+
+  * fixed style and script paths
+  * bug fix tab removal and confirmation
+  * trouble shooting silly issue
+
 0.3.0 / 2015-08-11
 ==================
 
