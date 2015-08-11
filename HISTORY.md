@@ -1,4 +1,12 @@
 
+0.3.0 / 2015-08-11
+==================
+
+  * tab sync comple via simple means
+  * fixing tab sync functionality
+  * added readme
+  * updated history
+
 0.2.0 / 2015-08-11
 ==================
 
