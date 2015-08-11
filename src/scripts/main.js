@@ -44,6 +44,10 @@ var localstorage = require('local-storage');
 
       // Listen for remove tab click.
       this.$remove.on('click', (e) => {
+        var state = this.getState();
+        if (Object.keys(state).length <= 1) {
+          return;
+        }
         if (confirm('You sure bro?')) {
           this.removeTab();
         }
@@ -92,9 +96,6 @@ var localstorage = require('local-storage');
       var key, state, newKey;
       key = this.getActiveKey();
       state = this.getState();
-      if (Object.keys(state).length <= 1) {
-        return;
-      }
       delete state[key];
       var newKey = Object.keys(state).reduce((prev, current) => {
         return current > prev ? current : prev;
