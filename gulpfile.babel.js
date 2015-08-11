@@ -49,7 +49,7 @@ gulp.task('styles', function() {
 
 gulp.task('html', function() {
   gulp.src("src/*.html")
-    .pipe(embedlr())
+    .pipe(gulpif(!isForProd,embedlr()))
     .pipe(gulp.dest('public'))
     .pipe(connect.reload());
 });

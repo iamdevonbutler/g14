@@ -33,17 +33,17 @@ var localstorage = require('local-storage');
       localstorage.on('content', content => {
         this.$tabs.html('');
         this.$content.val('');
-        this.init();
+        this.init(false);
       });
 
       // Listen for new tab click.
-      this.$add.on('click', () => {
+      this.$add.on('click', (e) => {
         // Add tab to DOM
         this.addTab();
       });
 
       // Listen for remove tab click.
-      this.$remove.on('click', () => {
+      this.$remove.on('click', (e) => {
         if (confirm('You sure bro?')) {
           this.removeTab();
         }
@@ -194,7 +194,7 @@ var localstorage = require('local-storage');
       return clone;
     },
 
-    init() {
+    init(bindEvents = true) {
       var text, content, state, $el, key;
       this.cache();
 
@@ -213,7 +213,9 @@ var localstorage = require('local-storage');
       });
 
       this.cacheActiveTab();
-      this.bindEvents();
+      if (bindEvents) {
+        this.bindEvents();
+      }
       text = this.getActiveState().text;
       this.insertText(text);
     }
