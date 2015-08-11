@@ -10,13 +10,25 @@ var connect = require('gulp-connect');
 var clean = require('gulp-clean');
 var uglify = require('gulp-uglify');
 var autoprefixer = require('gulp-autoprefixer');
+var gulpif = require('gulp-if');
+var argv = require('yargs').argv;
+
+function onError(err) {
+  console.log(err);
+  this.emit('end');
+}
+
+function isForProd() {
+  return argv.prod || argv.production || argv.build;
+}
 
 gulp.task('scripts', function() {
   gulp.src(['src/scripts/main.js'])
     .pipe(browserify())
+    .on('error', onError)
     .pipe(concat('main.js'))
     .pipe(babel())
-    .pipe(uglify())
+    .pipe( gulpif(isForProd, uglify()) )
     .pipe(gulp.dest('public'))
     .pipe(connect.reload());
 });
@@ -24,11 +36,12 @@ gulp.task('scripts', function() {
 gulp.task('styles', function() {
   gulp.src(['src/styles/main.scss'])
     .pipe(sass())
+    .on('error', onError)
     .pipe(autoprefixer({
         browsers: ['last 2 versions'],
         cascade: false
-    }))    
-    .pipe(minifyCSS())
+    }))
+    .pipe( gulpif(isForProd, minifyCSS()) )
     .pipe(concat('main.css'))
     .pipe(gulp.dest('public'))
     .pipe(connect.reload());
@@ -42,10 +55,12 @@ gulp.task('html', function() {
 });
 
 gulp.task('connect', function() {
-  connect.server({
-    root: 'public',
-    livereload: true
-  });
+  // if (!isForProd()) {
+    connect.server({
+      root: 'public',
+      livereload: true
+    });
+  // }
 });
 
 gulp.task('clean', function () {
@@ -53,17 +68,20 @@ gulp.task('clean', function () {
     .pipe(clean());
 });
 
-gulp.task('default', ['connect', 'clean', 'scripts', 'styles', 'html'], function() {
+var tasks = !isForProd() ? ['connect', 'clean', 'scripts', 'styles', 'html'] : ['clean', 'scripts', 'styles', 'html'];
 
-  watch('src/**', function(event) {
-    gulp.run('scripts');
-  });
+gulp.task('default', tasks, function() {
+  if (!isForProd()) {
+    watch('src/**', function(event) {
+      gulp.run('scripts');
+    });
 
-  watch('src/styles/**', function(event) {
-    gulp.run('styles');
-  });
+    watch('src/styles/**', function(event) {
+      gulp.run('styles');
+    });
 
-  watch('src/**/*.html', function(event) {
-    gulp.run('html');
-  });
+    watch('src/**/*.html', function(event) {
+      gulp.run('html');
+    });
+  }
 });

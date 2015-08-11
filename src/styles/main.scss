@@ -1,8 +1,20 @@
 @import "reset";
 
-body {
-  font-size: 100%;
-  font-family: "Times New Roman", serif;
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+$transitiontime: .3s;
+
+@mixin transition($transition...) {
+  -moz-transition:    $transition;
+  -o-transition:      $transition;
+  -webkit-transition: $transition;
+  transition:         $transition;
 }
 
 #content {
@@ -10,7 +22,7 @@ body {
   font-family: georgia, serif !important;
   color: rgba(0,0,0,0.6) !important;
   width: 50% !important;
-  padding: 50px 25% 0;
+  padding: 0 25%;
   height: 100% !important;
   position: fixed !important;
   border: none !important;
@@ -21,4 +33,68 @@ body {
   focus-outline: none !important;
   focus-box-shadow: none !important;
   outline: none !important;
+}
+
+#navigation {
+  width: 50% !important;
+  margin: 0 auto;
+  @include clearfix;
+  padding-top: 5px;
+  padding-bottom: 35px;
+}
+
+.icon {
+  font-size: 12px;
+  width: 20px;
+  display: inline-block;
+  float: left;
+  padding-top: 10px;
+}
+
+#tabs {
+  display: inline-block;
+  padding-left:30px;
+  padding-top: 1px;
+}
+
+.tab {
+  display: inline-block;
+  padding: 10px 20px;
+  color: rgba(0,0,0,.35);
+  &:after {
+    content: '';
+    border-right: 1px solid rgba(0,0,0,.2);
+    padding-left: 20px;
+    @include transition(all $transitiontime);
+  }
+  @include transition(all $transitiontime);
+  &:hover {
+    color: rgba(0,0,0,.7);
+    @include transition(all $transitiontime);
+    &:after {
+      border-color: rgba(0,0,0,.7);
+    }
+  }
+}
+
+#add {
+  display: inline-block;
+  float: left;
+  fill: rgba(0,0,0,.35);
+  @include transition(fill $transitiontime);
+  &:hover {
+    fill: rgba(0,0,0,.70);
+    @include transition(fill $transitiontime);
+  }
+}
+
+#remove {
+  display: inline-block;
+  float: right;
+  fill: rgba(0,0,0,.35);
+  @include transition(fill $transitiontime);
+  &:hover {
+    fill: rgba(0,0,0,.70);
+    @include transition(fill $transitiontime);
+  }
 }

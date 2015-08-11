@@ -17,10 +17,12 @@
     "gulp-concat": "2.6.0",
     "gulp-connect": "2.2.0",
     "gulp-embedlr": "0.5.2",
+    "gulp-if": "^1.2.5",
     "gulp-minify-css": "1.2.0",
     "gulp-sass": "2.0.4",
     "gulp-uglify": "1.2.0",
     "gulp-watch": "4.3.4",
-    "local-storage": "1.4.2"
+    "local-storage": "1.4.2",
+    "yargs": "^3.18.0"
   }
 }
