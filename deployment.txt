@@ -1,3 +1,3 @@
 Just a reminder:
 
-git subtree push --prefix public gh-pages
+git subtree push --prefix public origin gh-pages
