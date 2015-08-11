@@ -19,6 +19,7 @@ var localstorage = require('local-storage');
     bindEvents() {
       // Track and save content.
       this.$document.on('keyup', '#content', () => {
+
         var state, key, text;
         state = this.getState();
         key = this.getActiveKey();
@@ -29,71 +30,115 @@ var localstorage = require('local-storage');
         this.setTabName(this.$activeTab, text);
 
       });
-      // Prevent g14 open in another tab from overriding content.
+      // Prevent g14 open in another window from overriding content. Sync windows.
       localstorage.on('content', content => {
-        var altActiveKey, activeKey;
-        altActiveKey = this.getActiveKey(content);
-        activeKey = this.getActiveKey();
-        if (activeKey == altActiveKey) {
-          this.insertText(content[altActiveKey].text);
+        var activeTabKeys = [];
+        var state = this.getState();
+        var altKey = this.getActiveKey(content);
+        var activeKey = this.getActiveKey();
+        var text = content[altKey].text;
+        var keys = Object.keys(content);
+
+        // Add a tab.
+        this.$tabs.find('.tab').each((i,el) => {
+          var tid = $(el).attr('data-tab-id');
+          activeTabKeys.push(tid);
+        });
+          //var diff = $(keys).not(activeTabKeys).get();
+        if (keys.length > activeTabKeys.length) {
+          this.appendTabsToDOM(this.getDefaultState());
+        }
+
+        // Remove a tab.
+        if (keys.length < activeTabKeys.length) {
+          console.log('remove tav')
+          // this.removeTab();
+        }
+
+        // Update tab title.
+        this.$tabs.find('.tab').each((i,el) => {
+          var $el = $(el);
+          var id = $el.attr('data-tab-id');
+          this.setTabName($el, state[id].text);
+        });
+
+        // Update text if the other tab updated the same tab.
+        if (activeKey == altKey) {
+          this.insertText(text);
         }
       });
+
       // Listen for new tab click.
       this.$add.on('click', () => {
         // Add tab to DOM
-        var state, newState, newStateKey,text;
-        state = this.getState();
-        newState = this.getDefaultState();
-        newStateKey = Object.keys(newState).toString();
-        state = this.replaceObjValues(state, 'active', false);
-        $.extend(state, newState);
-        text = newState[newStateKey].text;
-        this.setState(state);
-        this.addTabs(newState);
-        this.changeActiveTab(newStateKey);
-        this.insertText(text);
-        this.cacheActiveTab();
-        this.setTabName(this.$activeTab, text);
+        this.addTab();
       });
+
       // Listen for remove tab click.
       this.$remove.on('click', () => {
-        var key, state, newKey;
-        key = this.getActiveKey();
-        state = this.getState();
-        if (Object.keys(state).length <= 1) {
-          return;
-        }
-        delete state[key];
-        var newKey = Object.keys(state).reduce((prev, current) => {
-          return current > prev ? current : prev;
-        }, '0');
-        state[newKey].active = true;
-        this.setState(state);
-        this.removeTab(key);
-        this.changeActiveTab(newKey);
-        this.cacheActiveTab();
+        this.removeTab();
       });
+
       // Listen for change tab events.
       this.$tabs.on('click', 'li', (e, target) => {
-        var $tab, activeKey, newActiveKey, state;
-        $tab = $(e.target);
-        activeKey = this.getActiveKey();
-        newActiveKey = $tab.attr('data-tab-id');
-        if (activeKey != newActiveKey) {
-          state = this.getState();
-          state = this.replaceObjValues(state, 'active', false);
-          state[newActiveKey].active = true;
-          this.setState(state);
-          this.changeActiveTab(newActiveKey);
-          this.insertText(state[newActiveKey].text);
-          this.cacheActiveTab($tab);
-        }
+        var $tab = $(e.target);
+        this.changeTab($tab);
       });
+
     },
 
-    addTabs(state = this.getState()) {
-      Object.keys(state).forEach((key) => {
-        var html = (state[key].active)
+    changeTab($tab) {
+      var activeKey, newActiveKey, state;
+      activeKey = this.getActiveKey();
+      newActiveKey = $tab.attr('data-tab-id');
+      if (activeKey != newActiveKey) {
+        state = this.getState();
+        state = this.replaceObjValues(state, 'active', false);
+        state[newActiveKey].active = true;
+        this.setState(state);
+        this.changeActiveTab(newActiveKey);
+        this.insertText(state[newActiveKey].text);
+        this.cacheActiveTab($tab);
+      }
+    },
+
+    addTab() {
+      var state, newState, newStateKey,text;
+      state = this.getState();
+      newState = this.getDefaultState();
+      newStateKey = Object.keys(newState).toString();
+      state = this.replaceObjValues(state, 'active', false);
+      $.extend(state, newState);
+      text = newState[newStateKey].text;
+      this.setState(state);
+      this.appendTabsToDOM(newState);
+      this.changeActiveTab(newStateKey);
+      this.insertText(text);
+      this.cacheActiveTab();
+      this.setTabName(this.$activeTab, text);
+    },
+
+    removeTab() {
+      var key, state, newKey;
+      key = this.getActiveKey();
+      state = this.getState();
+      if (Object.keys(state).length <= 1) {
+        return;
+      }
+      delete state[key];
+      var newKey = Object.keys(state).reduce((prev, current) => {
+        return current > prev ? current : prev;
+      }, '0');
+      state[newKey].active = true;
+      this.setState(state);
+      this.removeTabFromDOM(key);
+      this.changeActiveTab(newKey);
+      this.cacheActiveTab();
+    },
+
+    appendTabsToDOM(obj) {
+      Object.keys(obj).forEach((key) => {
+        var html = (obj[key].active)
           ? '<li class="tab active" data-tab-id="'+key+'"></li>'
           : '<li class="tab" data-tab-id="'+key+'"></li>';
         this.$tabs.append(html);
@@ -101,13 +146,13 @@ var localstorage = require('local-storage');
       return this;
     },
 
-    setTabName($tab, text) {
-      $tab.text(text.split('\n').shift().slice(0,15) || '...');
-    },
-
-    removeTab(key) {
+    removeTabFromDOM(key) {
       this.$tabs.find('.tab[data-tab-id="'+key+'"]').remove();
       return this;
+    },
+
+    setTabName($tab, text) {
+      $tab.text(text.split('\n').shift().slice(0,15) || '...');
     },
 
     cacheActiveTab($obj) {
@@ -189,7 +234,7 @@ var localstorage = require('local-storage');
       }
 
       // Modify DOM.
-      this.addTabs();
+      this.appendTabsToDOM(state);
       this.$tabs.find('.tab').each((i, el) => {
         $el = $(el);
         key = $el.attr('data-tab-id');
