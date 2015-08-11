@@ -55,12 +55,10 @@ gulp.task('html', function() {
 });
 
 gulp.task('connect', function() {
-  // if (!isForProd()) {
-    connect.server({
-      root: 'public',
-      livereload: true
-    });
-  // }
+  connect.server({
+    root: 'public',
+    livereload: true
+  });
 });
 
 gulp.task('clean', function () {
