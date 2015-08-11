@@ -54,6 +54,11 @@ gulp.task('html', function() {
     .pipe(connect.reload());
 });
 
+gulp.task('assets', function() {
+  gulp.src("CNAME")
+    .pipe(gulp.dest('public'))
+});
+
 gulp.task('connect', function() {
   connect.server({
     root: 'public',
@@ -66,7 +71,7 @@ gulp.task('clean', function () {
     .pipe(clean());
 });
 
-var tasks = !isForProd() ? ['connect', 'clean', 'scripts', 'styles', 'html'] : ['clean', 'scripts', 'styles', 'html'];
+var tasks = !isForProd() ? ['connect', 'clean', 'scripts', 'styles', 'html'] : ['clean', 'scripts', 'styles', 'html', 'assets'];
 
 gulp.task('default', tasks, function() {
   if (!isForProd()) {
