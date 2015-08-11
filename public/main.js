@@ -1,1 +1,380 @@
-"use strict";!function t(e,n,a){function i(c,s){if(!n[c]){if(!e[c]){var o="function"==typeof require&&require;if(!s&&o)return o(c,!0);if(r)return r(c,!0);throw new Error("Cannot find module '"+c+"'")}var u=n[c]={exports:{}};e[c][0].call(u.exports,function(t){var n=e[c][1][t];return i(n?n:t)},u,u.exports,t,e,n,a)}return n[c].exports}for(var r="function"==typeof require&&require,c=0;c<a.length;c++)i(a[c]);return i}({1:[function(t,e,n){(function(n){function a(t,e){return 1===arguments.length?i(t):r(t,e)}function i(t){return JSON.parse(f.getItem(t))}function r(t,e){try{return f.setItem(t,JSON.stringify(e)),!0}catch(n){return!1}}function c(t){return f.removeItem(t)}function s(){return f.clear()}var o=t("./stub"),u=t("./tracking"),f="localStorage"in n&&n.localStorage?n.localStorage:o;a.set=r,a.get=i,a.remove=c,a.clear=s,a.on=u.on,a.off=u.off,e.exports=a}).call(this,"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{"./stub":2,"./tracking":3}],2:[function(t,e,n){function a(t){return t in s?s[t]:null}function i(t,e){return s[t]=e,!0}function r(t){var e=t in s;return e?delete s[t]:!1}function c(){return s={},!0}var s={};e.exports={getItem:a,setItem:i,removeItem:r,clear:c}},{}],3:[function(t,e,n){(function(t){function n(){t.addEventListener?t.addEventListener("storage",a,!1):t.attachEvent?t.attachEvent("onstorage",a):t.onstorage=a}function a(e){function n(t){t(JSON.parse(e.newValue),JSON.parse(e.oldValue),e.url||e.uri)}e||(e=t.event);var a=c[e.key];a&&a.forEach(n)}function i(t,e){c[t]?c[t].push(e):c[t]=[e],s===!1&&n()}function r(t,e){var n=c[t];n.length>1?n.splice(n.indexOf(e),1):c[t]=[]}var c={},s=!1;e.exports={on:i,off:r}}).call(this,"undefined"!=typeof self?self:"undefined"!=typeof window?window:{})},{}],4:[function(t,e,n){var a=t("local-storage");!function(t,e,n,a,i){var r={cache:function(){this.$document=t(n),this.$content=t("#content"),this.$tabs=t("#tabs"),this.$add=t("#add"),this.$remove=t("#remove"),this.$activeTab={}},bindEvents:function(){var e=this;this.$document.on("keyup","#content",function(){var t,n,a;t=e.getState(),n=e.getActiveKey(),a=e.getText(),t[n].text=a,e.setState(t),e.setTabName(e.$activeTab,a)}),a.on("content",function(t){e.$tabs.html(""),e.$content.val(""),e.init()}),this.$add.on("click",function(){e.addTab()}),this.$remove.on("click",function(){e.removeTab()}),this.$tabs.on("click","li",function(n,a){var i=t(n.target);e.changeTab(i)})},changeTab:function(t){var e,n,a;e=this.getActiveKey(),n=t.attr("data-tab-id"),e!=n&&(a=this.getState(),a=this.replaceObjValues(a,"active",!1),a[n].active=!0,this.setState(a),this.changeActiveTab(n),this.insertText(a[n].text),this.cacheActiveTab(t))},addTab:function(){var e,n,a,i;e=this.getState(),n=this.getDefaultState(),a=Object.keys(n).toString(),e=this.replaceObjValues(e,"active",!1),t.extend(e,n),i=n[a].text,this.setState(e),this.appendTabsToDOM(n),this.changeActiveTab(a),this.insertText(i),this.cacheActiveTab(),this.setTabName(this.$activeTab,i)},removeTab:function(){var t,e,n;if(t=this.getActiveKey(),e=this.getState(),!(Object.keys(e).length<=1)){delete e[t];var n=Object.keys(e).reduce(function(t,e){return e>t?e:t},"0");e[n].active=!0,this.setState(e),this.removeTabFromDOM(t),this.changeActiveTab(n),this.cacheActiveTab()}},appendTabsToDOM:function(t){var e=this;return Object.keys(t).forEach(function(n){var a=t[n].active?'<li class="tab active" data-tab-id="'+n+'"></li>':'<li class="tab" data-tab-id="'+n+'"></li>';e.$tabs.append(a)}),this},removeTabFromDOM:function(t){return this.$tabs.find('.tab[data-tab-id="'+t+'"]').remove(),this},setTabName:function(t,e){t.text(e.split("\n").shift().slice(0,15)||"...")},cacheActiveTab:function(e){return this.$activeTab=e?e:t("#tabs .tab.active"),this},changeActiveTab:function(t){return this.$tabs.find(".tab").removeClass("active").filter('[data-tab-id="'+t+'"]').addClass("active"),this},getText:function(){return this.$content.val()},insertText:function(t){return this.$content.val(t),this},setState:function(t){var e=arguments.length<=1||arguments[1]===i?"content":arguments[1];return a.set(e,t),this},getState:function(){var t=arguments.length<=0||arguments[0]===i?"content":arguments[0];return a.get(t)},getActiveState:function(){var t=arguments.length<=0||arguments[0]===i?this.getState():arguments[0],e=this.getActiveKey(t);return t[e]},getActiveKey:function(){var t=arguments.length<=0||arguments[0]===i?this.getState():arguments[0],e={};return Object.keys(t).forEach(function(n){t[n].active&&(e=n)}),e},getDefaultState:function(){var t={};return t[Date.now()]={text:"",active:!0},t},replaceObjValues:function(e,n,a){var i;return i=t.extend({},e),Object.keys(i).forEach(function(t){i[t][n]=a}),i},init:function(){var e,n,a,i,r=this;this.cache(),n=this.getState(),n||(n=this.getDefaultState(),this.setState(n)),this.appendTabsToDOM(n),this.$tabs.find(".tab").each(function(e,c){a=t(c),i=a.attr("data-tab-id"),r.setTabName(a,n[i].text)}),this.cacheActiveTab(),this.bindEvents(),e=this.getActiveState().text,this.insertText(e)}};t(n).ready(function(){r.init()})}(jQuery,window,document,a)},{"local-storage":1}]},{},[4]);
+"use strict";
+
+(function e(t, n, r) {
+  function s(o, u) {
+    if (!n[o]) {
+      if (!t[o]) {
+        var a = typeof require == "function" && require;if (!u && a) return a(o, !0);if (i) return i(o, !0);throw new Error("Cannot find module '" + o + "'");
+      }var f = n[o] = { exports: {} };t[o][0].call(f.exports, function (e) {
+        var n = t[o][1][e];return s(n ? n : e);
+      }, f, f.exports, e, t, n, r);
+    }return n[o].exports;
+  }var i = typeof require == "function" && require;for (var o = 0; o < r.length; o++) s(r[o]);return s;
+})({ 1: [function (require, module, exports) {
+    (function (global) {
+      'use strict';
+
+      var stub = require('./stub');
+      var tracking = require('./tracking');
+      var ls = 'localStorage' in global && global.localStorage ? global.localStorage : stub;
+
+      function accessor(key, value) {
+        if (arguments.length === 1) {
+          return get(key);
+        }
+        return set(key, value);
+      }
+
+      function get(key) {
+        return JSON.parse(ls.getItem(key));
+      }
+
+      function set(key, value) {
+        try {
+          ls.setItem(key, JSON.stringify(value));
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function remove(key) {
+        return ls.removeItem(key);
+      }
+
+      function clear() {
+        return ls.clear();
+      }
+
+      accessor.set = set;
+      accessor.get = get;
+      accessor.remove = remove;
+      accessor.clear = clear;
+      accessor.on = tracking.on;
+      accessor.off = tracking.off;
+
+      module.exports = accessor;
+    }).call(this, typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+  }, { "./stub": 2, "./tracking": 3 }], 2: [function (require, module, exports) {
+    'use strict';
+
+    var ms = {};
+
+    function getItem(key) {
+      return key in ms ? ms[key] : null;
+    }
+
+    function setItem(key, value) {
+      ms[key] = value;
+      return true;
+    }
+
+    function removeItem(key) {
+      var found = (key in ms);
+      if (found) {
+        return delete ms[key];
+      }
+      return false;
+    }
+
+    function clear() {
+      ms = {};
+      return true;
+    }
+
+    module.exports = {
+      getItem: getItem,
+      setItem: setItem,
+      removeItem: removeItem,
+      clear: clear
+    };
+  }, {}], 3: [function (require, module, exports) {
+    (function (global) {
+      'use strict';
+
+      var listeners = {};
+      var listening = false;
+
+      function listen() {
+        if (global.addEventListener) {
+          global.addEventListener('storage', change, false);
+        } else if (global.attachEvent) {
+          global.attachEvent('onstorage', change);
+        } else {
+          global.onstorage = change;
+        }
+      }
+
+      function change(e) {
+        if (!e) {
+          e = global.event;
+        }
+        var all = listeners[e.key];
+        if (all) {
+          all.forEach(fire);
+        }
+
+        function fire(listener) {
+          listener(JSON.parse(e.newValue), JSON.parse(e.oldValue), e.url || e.uri);
+        }
+      }
+
+      function on(key, fn) {
+        if (listeners[key]) {
+          listeners[key].push(fn);
+        } else {
+          listeners[key] = [fn];
+        }
+        if (listening === false) {
+          listen();
+        }
+      }
+
+      function off(key, fn) {
+        var ns = listeners[key];
+        if (ns.length > 1) {
+          ns.splice(ns.indexOf(fn), 1);
+        } else {
+          listeners[key] = [];
+        }
+      }
+
+      module.exports = {
+        on: on,
+        off: off
+      };
+    }).call(this, typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
+  }, {}], 4: [function (require, module, exports) {
+    'use strict';
+
+    var localstorage = require('local-storage');
+
+    ;(function ($, window, document, localstorage, undefined) {
+
+      var main = {
+
+        cache: function cache() {
+          this.$document = $(document);
+          this.$content = $('#content');
+          this.$tabs = $('#tabs');
+          this.$add = $('#add');
+          this.$remove = $('#remove');
+          this.$activeTab = {};
+        },
+
+        bindEvents: function bindEvents() {
+          var _this = this;
+
+          // Track and save content.
+          this.$document.on('keyup', '#content', function () {
+
+            var state, key, text;
+            state = _this.getState();
+            key = _this.getActiveKey();
+            text = _this.getText();
+            state[key].text = text;
+            _this.setState(state);
+            // Update tab name.
+            _this.setTabName(_this.$activeTab, text);
+          });
+          // Prevent g14 open in another window from overriding content. Sync windows.
+          localstorage.on('content', function (content) {
+            _this.$tabs.html('');
+            _this.$content.val('');
+            _this.init();
+          });
+
+          // Listen for new tab click.
+          this.$add.on('click', function () {
+            // Add tab to DOM
+            _this.addTab();
+          });
+
+          // Listen for remove tab click.
+          this.$remove.on('click', function () {
+            if (confirm('You sure bro?')) {
+              _this.removeTab();
+            }
+          });
+
+          // Listen for change tab events.
+          this.$tabs.on('click', 'li', function (e, target) {
+            var $tab = $(e.target);
+            _this.changeTab($tab);
+          });
+        },
+
+        changeTab: function changeTab($tab) {
+          var activeKey, newActiveKey, state;
+          activeKey = this.getActiveKey();
+          newActiveKey = $tab.attr('data-tab-id');
+          if (activeKey != newActiveKey) {
+            state = this.getState();
+            state = this.replaceObjValues(state, 'active', false);
+            state[newActiveKey].active = true;
+            this.setState(state);
+            this.changeActiveTab(newActiveKey);
+            this.insertText(state[newActiveKey].text);
+            this.cacheActiveTab($tab);
+          }
+        },
+
+        addTab: function addTab() {
+          var state, newState, newStateKey, text;
+          state = this.getState();
+          newState = this.getDefaultState();
+          newStateKey = Object.keys(newState).toString();
+          state = this.replaceObjValues(state, 'active', false);
+          $.extend(state, newState);
+          text = newState[newStateKey].text;
+          this.setState(state);
+          this.appendTabsToDOM(newState);
+          this.changeActiveTab(newStateKey);
+          this.insertText(text);
+          this.cacheActiveTab();
+          this.setTabName(this.$activeTab, text);
+        },
+
+        removeTab: function removeTab() {
+          var key, state, newKey;
+          key = this.getActiveKey();
+          state = this.getState();
+          if (Object.keys(state).length <= 1) {
+            return;
+          }
+          delete state[key];
+          var newKey = Object.keys(state).reduce(function (prev, current) {
+            return current > prev ? current : prev;
+          }, '0');
+          state[newKey].active = true;
+          this.setState(state);
+          this.removeTabFromDOM(key);
+          this.changeActiveTab(newKey);
+          this.insertText(state[newKey].text);
+          this.cacheActiveTab();
+        },
+
+        appendTabsToDOM: function appendTabsToDOM(obj) {
+          var _this2 = this;
+
+          Object.keys(obj).forEach(function (key) {
+            var html = obj[key].active ? '<li class="tab active" data-tab-id="' + key + '"></li>' : '<li class="tab" data-tab-id="' + key + '"></li>';
+            _this2.$tabs.append(html);
+          });
+          return this;
+        },
+
+        removeTabFromDOM: function removeTabFromDOM(key) {
+          this.$tabs.find('.tab[data-tab-id="' + key + '"]').remove();
+          return this;
+        },
+
+        setTabName: function setTabName($tab, text) {
+          $tab.text(text.split('\n').shift().slice(0, 15) || '...');
+        },
+
+        cacheActiveTab: function cacheActiveTab($obj) {
+          if (!$obj) {
+            this.$activeTab = $('#tabs .tab.active');
+          } else {
+            this.$activeTab = $obj;
+          }
+          return this;
+        },
+
+        changeActiveTab: function changeActiveTab(key) {
+          this.$tabs.find('.tab').removeClass('active').filter('[data-tab-id="' + key + '"]').addClass('active');
+          return this;
+        },
+
+        getText: function getText() {
+          return this.$content.val();
+        },
+
+        insertText: function insertText(content) {
+          this.$content.val(content);
+          return this;
+        },
+
+        setState: function setState(state) {
+          var key = arguments.length <= 1 || arguments[1] === undefined ? 'content' : arguments[1];
+
+          localstorage.set(key, state);
+          return this;
+        },
+
+        getState: function getState() {
+          var key = arguments.length <= 0 || arguments[0] === undefined ? 'content' : arguments[0];
+
+          return localstorage.get(key);
+        },
+
+        getActiveState: function getActiveState() {
+          var state = arguments.length <= 0 || arguments[0] === undefined ? this.getState() : arguments[0];
+
+          var key = this.getActiveKey(state);
+          return state[key];
+        },
+
+        getActiveKey: function getActiveKey() {
+          var state = arguments.length <= 0 || arguments[0] === undefined ? this.getState() : arguments[0];
+
+          var activeKey = {};
+          Object.keys(state).forEach(function (key) {
+            if (state[key].active) {
+              activeKey = key;
+            }
+          });
+          return activeKey;
+        },
+
+        getDefaultState: function getDefaultState() {
+          var state = {};
+          state[Date.now()] = { text: '', active: true };
+          return state;
+        },
+
+        replaceObjValues: function replaceObjValues(obj, field, value) {
+          // Not by ref.
+          var o = {},
+              clone;
+          clone = $.extend({}, obj);
+          Object.keys(clone).forEach(function (key) {
+            clone[key][field] = value;
+          });
+          return clone;
+        },
+
+        init: function init() {
+          var _this3 = this;
+
+          var text, content, state, $el, key;
+          this.cache();
+
+          state = this.getState();
+          if (!state) {
+            state = this.getDefaultState();
+            this.setState(state);
+          }
+
+          // Modify DOM.
+          this.appendTabsToDOM(state);
+          this.$tabs.find('.tab').each(function (i, el) {
+            $el = $(el);
+            key = $el.attr('data-tab-id');
+            _this3.setTabName($el, state[key].text);
+          });
+
+          this.cacheActiveTab();
+          this.bindEvents();
+          text = this.getActiveState().text;
+          this.insertText(text);
+        }
+
+      };
+
+      $(document).ready(function () {
+        main.init();
+      });
+    })(jQuery, window, document, localstorage);
+  }, { "local-storage": 1 }] }, {}, [4]);

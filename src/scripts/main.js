@@ -44,7 +44,9 @@ var localstorage = require('local-storage');
 
       // Listen for remove tab click.
       this.$remove.on('click', () => {
-        this.removeTab();
+        if (confirm('You sure bro?')) {
+          this.removeTab();
+        }
       });
 
       // Listen for change tab events.
@@ -101,6 +103,7 @@ var localstorage = require('local-storage');
       this.setState(state);
       this.removeTabFromDOM(key);
       this.changeActiveTab(newKey);
+      this.insertText(state[newKey].text);
       this.cacheActiveTab();
     },
 
