@@ -1,4 +1,15 @@
 
+0.3.2 / 2015-08-11
+==================
+
+  * fixed bug - binding events multiple times. no bueno
+  * fixed typo
+  * fixed typo
+  * built site
+  * fixed style and script paths
+  * bug fix tab removal and confirmation
+  * trouble shooting silly issue
+
 0.3.1 / 2015-08-11
 ==================
 
