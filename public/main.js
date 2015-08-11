@@ -160,7 +160,6 @@
           this.$add = $('#add');
           this.$remove = $('#remove');
           this.$activeTab = {};
-          this.state = {};
         },
 
         bindEvents: function bindEvents() {
@@ -180,40 +179,9 @@
           });
           // Prevent g14 open in another window from overriding content. Sync windows.
           localstorage.on('content', function (content) {
-            var activeTabKeys = [];
-            var state = _this.getState();
-            var altKey = _this.getActiveKey(content);
-            var activeKey = _this.getActiveKey();
-            var text = content[altKey].text;
-            var keys = Object.keys(content);
-
-            // Add a tab.
-            _this.$tabs.find('.tab').each(function (i, el) {
-              var tid = $(el).attr('data-tab-id');
-              activeTabKeys.push(tid);
-            });
-            //var diff = $(keys).not(activeTabKeys).get();
-            if (keys.length > activeTabKeys.length) {
-              _this.appendTabsToDOM(_this.getDefaultState());
-            }
-
-            // Remove a tab.
-            if (keys.length < activeTabKeys.length) {
-              console.log('remove tav');
-              // this.removeTab();
-            }
-
-            // Update tab title.
-            _this.$tabs.find('.tab').each(function (i, el) {
-              var $el = $(el);
-              var id = $el.attr('data-tab-id');
-              _this.setTabName($el, state[id].text);
-            });
-
-            // Update text if the other tab updated the same tab.
-            if (activeKey == altKey) {
-              _this.insertText(text);
-            }
+            _this.$tabs.html('');
+            _this.$content.val('');
+            _this.init();
           });
 
           // Listen for new tab click.
