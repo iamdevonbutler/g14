@@ -53,7 +53,7 @@ var keyboardjs = require('keyboardjs');
         this.changeTab($tab);
       });
 
-      // Keyboard Shortcuts
+      // Switch tab right.
       keyboardjs.bind('command+right', (e) => {
         var state, key, $tab;
         e.preventDefault();
@@ -63,6 +63,7 @@ var keyboardjs = require('keyboardjs');
         this.changeTab($tab);
       });
 
+      // Switch tab left.
       keyboardjs.bind('command+left', (e) => {
         var state, key, $tab;
         e.preventDefault();
@@ -72,14 +73,16 @@ var keyboardjs = require('keyboardjs');
         this.changeTab($tab);
       });
 
-      keyboardjs.bind(['command+d', 'command+r'], (e) => {
+      // Remove tab.
+      keyboardjs.bind('command+d', (e) => {
         e.preventDefault();
         if (this.confirmTabRemoval()) {
           this.removeTab();
         }
       });
 
-      keyboardjs.bind('command+a', (e) => {
+      // Add tab.
+      keyboardjs.bind('command+e', (e) => {
         e.preventDefault();
         this.addTab();
       });
@@ -182,7 +185,7 @@ var keyboardjs = require('keyboardjs');
         .filter(Boolean)
         .filter(val => val.trim())
         .shift();
-      tabName = tabName ? tabName.slice(0,15) : '...';
+      tabName = tabName ? tabName.slice(0,13) : '...';
       $tab.text(tabName);
     },
 
