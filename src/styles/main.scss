@@ -8,6 +8,10 @@
   }
 }
 
+.clearfix {
+  @include clearfix();
+}
+
 $transitiontime: .3s;
 
 @mixin transition($transition...) {
@@ -74,6 +78,13 @@ $transitiontime: .3s;
     &:after {
       border-color: rgba(0,0,0,.7);
     }
+  }
+}
+
+.tab.active {
+  color: rgba(0,0,0,.70);
+  &:after {
+    border-color: rgba(0,0,0,.70);
   }
 }
 

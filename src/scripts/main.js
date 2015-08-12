@@ -1,8 +1,9 @@
 'use strict';
 
 var localstorage = require('local-storage');
+var keyboardjs = require('keyboardjs');
 
-;(function($, window, document, localstorage, undefined) {
+;(function($, window, document, localstorage, keyboardjs, undefined) {
 
   var main = {
 
@@ -59,6 +60,18 @@ var localstorage = require('local-storage');
         this.changeTab($tab);
       });
 
+      // Keyboard Shortcuts
+      keyboardjs.bind('command+right', (e) => {
+        e.preventDefault();
+        var state = this.getState()
+        console.log(this.getTab(state, true));
+      });
+
+      keyboardjs.bind('command+left', (e) => {
+        e.preventDefault();
+        var state = this.getState()
+        console.log(this.getTab(state, false));
+      });
     },
 
     changeTab($tab) {
@@ -106,6 +119,23 @@ var localstorage = require('local-storage');
       this.changeActiveTab(newKey);
       this.insertText(state[newKey].text);
       this.cacheActiveTab();
+    },
+
+    // Will return the first tab if nexted on the last tab.
+    // Will return the last tab if prev on the first tab.
+    getTab(state, next = true) {
+      var sorted, keys, nextKey, index;
+      keys = Object.keys(state);
+      sorted = next ? this.sortArray(keys) : this.sortArray(keys).reverse();
+
+      var index;
+      keys.forEach((key,i) => {
+        if (state[key].active) {
+          index = i;
+        }
+      });
+      nextKey = index+1 == keys.length ? sorted[0] : sorted.slice(index+1, index+2);
+      return this.$tabs.find('[data-tab-id="'+nextKey+'"]')
     },
 
     appendTabsToDOM(obj) {
@@ -195,6 +225,12 @@ var localstorage = require('local-storage');
       return clone;
     },
 
+    sortArray(obj) {
+      return obj.sort(function (a, b) {
+         return a > b ? 1 : a < b ? -1 : 0;
+      });
+    },
+
     init(bindEvents = true) {
       var text, content, state, $el, key;
       this.cache();
@@ -227,4 +263,4 @@ var localstorage = require('local-storage');
     main.init();
   });
 
-})(jQuery, window, document, localstorage);
+})(jQuery, window, document, localstorage, keyboardjs);
