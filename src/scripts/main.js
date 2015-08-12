@@ -58,7 +58,7 @@ var keyboardjs = require('keyboardjs');
         var state, key, $tab;
         e.preventDefault();
         state = this.getState();
-        key = this.getAdjacentTabKey(state, false);
+        key = this.getAdjacentTabKey(state, true);
         $tab = this.getTabElementByKey(key);
         this.changeTab($tab);
       });
@@ -104,6 +104,7 @@ var keyboardjs = require('keyboardjs');
       }
     },
 
+    // @todo this method does too much.
     addTab() {
       var state, newState, newStateKey,text;
       state = this.getState();
@@ -126,12 +127,13 @@ var keyboardjs = require('keyboardjs');
       activeKey = this.getActiveKey(state)
       // Don't delete the only tab.
       if (Object.keys(state).length <= 1) {
-        return;
+        return false;
       }
       // Don't ask for confirmation if there is no content.
       return state[activeKey].text ? confirm('You sure bro?') : true;
     },
 
+    // @todo this method does too much.
     removeTab() {
       var key, state, newKey;
       key = this.getActiveKey();
@@ -148,13 +150,15 @@ var keyboardjs = require('keyboardjs');
       this.cacheActiveTab();
     },
 
+    // Set next to false to get the previous key.
     // Will return the first tab if nexted on the last tab.
     // Will return the last tab if prev on the first tab.
-    getAdjacentTabKey(state, next = true) {
+    getAdjacentTabKey(state = this.getState(), next = true) {
+      console.log(next);
       var sorted, keys, nextKey, index;
       keys = Object.keys(state);
       sorted = next ? this.sortArray(keys) : this.sortArray(keys).reverse();
-
+      console.log(sorted);
       var index;
       keys.forEach((key,i) => {
         if (state[key].active) {
@@ -185,7 +189,7 @@ var keyboardjs = require('keyboardjs');
         .filter(Boolean)
         .filter(val => val.trim())
         .shift();
-      tabName = tabName ? tabName.slice(0,13) : '...';
+      tabName = tabName ? tabName.slice(0,25) : '...';
       $tab.text(tabName);
     },
 
@@ -241,12 +245,14 @@ var keyboardjs = require('keyboardjs');
       return activeKey;
     },
 
+    // Returns state for a new/blank tab.
     getDefaultState() {
       var state = {};
       state[Date.now()] = { text: '', active: true };
       return state;
     },
 
+    // Select tab from DOM. return jQuery element
     getTabElementByKey(key) {
       return this.$tabs.find('[data-tab-id="'+key+'"]')
     },
@@ -261,12 +267,14 @@ var keyboardjs = require('keyboardjs');
       return clone;
     },
 
+    // Sort numbers asc order.
     sortArray(obj) {
       return obj.sort(function (a, b) {
          return a > b ? 1 : a < b ? -1 : 0;
       });
     },
 
+    // Main method.
     init(bindEvents = true) {
       var text, content, state, $el, key;
       this.cache();

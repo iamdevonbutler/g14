@@ -77,15 +77,24 @@ $transitiontime: .3s;
 }
 
 .tab {
+  position: relative;
   float: left;
   display: block;
-  padding: 10px 20px;
+  margin: 10px 0;
+  padding: 0 30px;
+  &:first-child {
+    padding-left: 40px;
+  }
   color: rgba(0,0,0,.35);
   &:after {
     content: '';
     border-right: 1px solid rgba(0,0,0,.2);
     padding-left: 20px;
     @include transition(all $transitiontime);
+    top: 0;
+    right: 0;
+    position: absolute;
+    height: 100%;
   }
   @include transition(all $transitiontime);
   &:hover {
