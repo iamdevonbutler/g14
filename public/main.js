@@ -949,14 +949,12 @@
 
           // Track and save content.
           this.$document.on('keyup', '#content', function () {
-
             var state, key, text;
             state = _this2.getState();
             key = _this2.getActiveKey();
             text = _this2.getText();
             state[key].text = text;
             _this2.setState(state);
-            // Update tab name.
             _this2.setTabName(_this2.$activeTab, text);
           });
           // Prevent g14 open in another window from overriding content. Sync windows.

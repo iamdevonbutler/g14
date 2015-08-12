@@ -19,16 +19,13 @@ var keyboardjs = require('keyboardjs');
     bindEvents() {
       // Track and save content.
       this.$document.on('keyup', '#content', () => {
-
         var state, key, text;
         state = this.getState();
         key = this.getActiveKey();
         text = this.getText();
         state[key].text = text;
         this.setState(state);
-        // Update tab name.
         this.setTabName(this.$activeTab, text);
-
       });
       // Prevent g14 open in another window from overriding content. Sync windows.
       localstorage.on('content', content => {

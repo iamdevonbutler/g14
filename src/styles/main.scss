@@ -8,18 +8,26 @@
   }
 }
 
-.clearfix {
-  @include clearfix();
-}
-
-$transitiontime: .3s;
-
 @mixin transition($transition...) {
   -moz-transition:    $transition;
   -o-transition:      $transition;
   -webkit-transition: $transition;
   transition:         $transition;
 }
+
+@mixin userselect($value) {
+  -webkit-user-select: $value;
+  -moz-user-select: $value;
+  -khtml-user-select: $value;
+  -ms-user-select: $value;
+}
+
+.clearfix {
+  @include clearfix();
+}
+
+$transitiontime: .3s;
+
 
 #content {
   font-size: 1em !important;
@@ -59,6 +67,7 @@ $transitiontime: .3s;
   display: inline-block;
   padding-left:30px;
   padding-top: 1px;
+  @include userselect(none);
 }
 
 .tab {
@@ -92,6 +101,7 @@ $transitiontime: .3s;
   display: inline-block;
   float: left;
   fill: rgba(0,0,0,.35);
+  @include userselect(none);
   @include transition(fill $transitiontime);
   &:hover {
     fill: rgba(0,0,0,.70);
@@ -103,6 +113,7 @@ $transitiontime: .3s;
   display: inline-block;
   float: right;
   fill: rgba(0,0,0,.35);
+  @include userselect(none);
   @include transition(fill $transitiontime);
   &:hover {
     fill: rgba(0,0,0,.70);
