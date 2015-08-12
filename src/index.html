@@ -1,47 +1,48 @@
 <!doctype html>
 <html class="no-js" lang="">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>G14</title>
-        <meta name="description" content="G14 classified">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="main.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
-    </head>
-    <body>
-        <!--[if lt IE 9]>
-            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-          <section id="wrapper" class="clearfix">
-            <nav id="navigation">
-              <figure id="add">
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 85 106.25" enable-background="new 0 0 85 85" xml:space="preserve"><path d="M42.039,82c-10.236,0.004-20.507-3.902-28.323-11.719l0,0C5.918,62.485,1.998,52.241,2,42.023l0,0  C1.996,31.79,5.904,21.526,13.716,13.715l0,0C21.519,5.912,31.771,1.997,42,2l0,0c10.227-0.003,20.479,3.912,28.284,11.715l0,0  l-2.135,2.134l-2.133,2.133C59.377,11.344,50.699,8.039,42,8.036l0,0c-8.702,0.004-17.379,3.309-24.017,9.946l0,0  c-6.643,6.646-9.945,15.329-9.949,24.042l0,0c0.002,8.689,3.315,17.355,9.948,23.991l0,0c6.648,6.647,15.336,9.945,24.055,9.948l0,0  c8.688-0.002,17.348-3.315,23.981-9.946l0,0c6.627-6.631,9.943-15.292,9.945-23.981l0,0c-0.004-8.718-3.303-17.407-9.947-24.054l0,0  l2.133-2.133l2.135-2.135C78.1,21.527,82.004,31.799,82,42.035l0,0c0.002,10.219-3.922,20.456-11.717,28.249l0,0  c-7.789,7.788-18.023,11.715-28.239,11.715l0,0C42.042,82,42.039,82,42.039,82L42.039,82z M42,64.079  c1.597,0.001,2.892-1.294,2.892-2.89v-16.3l16.297,0.002c1.596,0.001,2.889-1.294,2.887-2.89c0-1.6-1.293-2.891-2.889-2.891H44.891  V22.814c0.002-1.599-1.293-2.892-2.89-2.891c-1.597-0.001-2.892,1.293-2.89,2.891v16.297H22.812c-1.598,0-2.892,1.293-2.892,2.892  c0,1.595,1.294,2.891,2.891,2.89l16.297,0.001v16.296C39.111,62.785,40.404,64.078,42,64.079z"/><text x="0" y="100" fill="#000000" </svg>
-              </figure>
-              <ul id="tabs" role="navigation">
-                <!-- Liste items popluated dynamically  -->
-              </ul>
-              <figure id="remove">
-                <svg class="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 85 106.25" enable-background="new 0 0 85 85" xml:space="preserve"><path d="M42.04,82c-10.236,0.004-20.507-3.902-28.324-11.719l0,0C5.919,62.485,1.999,52.241,2,42.023l0,0  C1.997,31.79,5.905,21.526,13.717,13.715l0,0C21.52,5.912,31.772,1.997,42,2l0,0c10.227-0.003,20.48,3.912,28.283,11.715l0,0  l-2.133,2.134l-2.133,2.133C59.379,11.344,50.701,8.039,42,8.036l0,0c-8.702,0.004-17.378,3.309-24.017,9.946l0,0  C11.34,24.628,8.038,33.31,8.035,42.023l0,0c0.002,8.689,3.315,17.355,9.948,23.991l0,0c6.648,6.647,15.336,9.945,24.056,9.948l0,0  c8.687-0.002,17.349-3.315,23.981-9.946l0,0c6.627-6.631,9.941-15.292,9.943-23.981l0,0c-0.002-8.718-3.301-17.407-9.945-24.054l0,0  l2.133-2.133l2.135-2.135C78.1,21.527,82.006,31.799,82,42.035l0,0c0.002,10.219-3.92,20.456-11.715,28.249l0,0  c-7.791,7.788-18.023,11.715-28.24,11.715l0,0C42.043,82,42.04,82,42.04,82L42.04,82z M57.613,57.612  c1.129-1.129,1.129-2.96,0-4.089L46.088,42l11.525-11.524c1.129-1.127,1.129-2.958,0-4.084c-1.131-1.13-2.961-1.13-4.088-0.001  L42.002,37.915L30.478,26.39c-1.129-1.13-2.959-1.129-4.086,0c-1.13,1.128-1.13,2.958,0,4.086L37.915,42L26.389,53.524  c-1.129,1.13-1.13,2.961,0,4.091c1.127,1.127,2.959,1.128,4.087-0.002L42.002,46.09l11.523,11.523  C54.654,58.742,56.484,58.742,57.613,57.612z"/><text x="0" y="100" fill="#000000" </svg>
-              </figure>
-            </nav>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>G14</title>
+    <meta name="description" content="G14 classified">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+  </head>
+  <body>
+    <!-- If you should happen to be some sort of trixie vixen and have stumbled upon the ole source code - then you should be delighted to learn about the hidden keybaord shortcuts  -->
+    <!-- add tab: 'command+a' -->
+    <!-- remove tab: 'command+d' or 'command+r' -->
+    <!-- switch tabs: 'command+right\left' -->
+    <!--[if lt IE 9]>
+        <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <section id="wrapper" class="clearfix">
+      <nav id="navigation">
+        <figure id="add">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 85 106.25" enable-background="new 0 0 85 85" xml:space="preserve"><path d="M42.039,82c-10.236,0.004-20.507-3.902-28.323-11.719l0,0C5.918,62.485,1.998,52.241,2,42.023l0,0  C1.996,31.79,5.904,21.526,13.716,13.715l0,0C21.519,5.912,31.771,1.997,42,2l0,0c10.227-0.003,20.479,3.912,28.284,11.715l0,0  l-2.135,2.134l-2.133,2.133C59.377,11.344,50.699,8.039,42,8.036l0,0c-8.702,0.004-17.379,3.309-24.017,9.946l0,0  c-6.643,6.646-9.945,15.329-9.949,24.042l0,0c0.002,8.689,3.315,17.355,9.948,23.991l0,0c6.648,6.647,15.336,9.945,24.055,9.948l0,0  c8.688-0.002,17.348-3.315,23.981-9.946l0,0c6.627-6.631,9.943-15.292,9.945-23.981l0,0c-0.004-8.718-3.303-17.407-9.947-24.054l0,0  l2.133-2.133l2.135-2.135C78.1,21.527,82.004,31.799,82,42.035l0,0c0.002,10.219-3.922,20.456-11.717,28.249l0,0  c-7.789,7.788-18.023,11.715-28.239,11.715l0,0C42.042,82,42.039,82,42.039,82L42.039,82z M42,64.079  c1.597,0.001,2.892-1.294,2.892-2.89v-16.3l16.297,0.002c1.596,0.001,2.889-1.294,2.887-2.89c0-1.6-1.293-2.891-2.889-2.891H44.891  V22.814c0.002-1.599-1.293-2.892-2.89-2.891c-1.597-0.001-2.892,1.293-2.89,2.891v16.297H22.812c-1.598,0-2.892,1.293-2.892,2.892  c0,1.595,1.294,2.891,2.891,2.89l16.297,0.001v16.296C39.111,62.785,40.404,64.078,42,64.079z"/><text x="0" y="100" fill="#000000" </svg>
+        </figure>
+        <ul id="tabs" role="navigation">
+          <!-- Liste items popluated dynamically  -->
+        </ul>
+        <figure id="remove">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 85 106.25" enable-background="new 0 0 85 85" xml:space="preserve"><path d="M42.04,82c-10.236,0.004-20.507-3.902-28.324-11.719l0,0C5.919,62.485,1.999,52.241,2,42.023l0,0  C1.997,31.79,5.905,21.526,13.717,13.715l0,0C21.52,5.912,31.772,1.997,42,2l0,0c10.227-0.003,20.48,3.912,28.283,11.715l0,0  l-2.133,2.134l-2.133,2.133C59.379,11.344,50.701,8.039,42,8.036l0,0c-8.702,0.004-17.378,3.309-24.017,9.946l0,0  C11.34,24.628,8.038,33.31,8.035,42.023l0,0c0.002,8.689,3.315,17.355,9.948,23.991l0,0c6.648,6.647,15.336,9.945,24.056,9.948l0,0  c8.687-0.002,17.349-3.315,23.981-9.946l0,0c6.627-6.631,9.941-15.292,9.943-23.981l0,0c-0.002-8.718-3.301-17.407-9.945-24.054l0,0  l2.133-2.133l2.135-2.135C78.1,21.527,82.006,31.799,82,42.035l0,0c0.002,10.219-3.92,20.456-11.715,28.249l0,0  c-7.791,7.788-18.023,11.715-28.24,11.715l0,0C42.043,82,42.04,82,42.04,82L42.04,82z M57.613,57.612  c1.129-1.129,1.129-2.96,0-4.089L46.088,42l11.525-11.524c1.129-1.127,1.129-2.958,0-4.084c-1.131-1.13-2.961-1.13-4.088-0.001  L42.002,37.915L30.478,26.39c-1.129-1.13-2.959-1.129-4.086,0c-1.13,1.128-1.13,2.958,0,4.086L37.915,42L26.389,53.524  c-1.129,1.13-1.13,2.961,0,4.091c1.127,1.127,2.959,1.128,4.087-0.002L42.002,46.09l11.523,11.523  C54.654,58.742,56.484,58.742,57.613,57.612z"/><text x="0" y="100" fill="#000000" </svg>
+        </figure>
+      </nav>
+      <textarea id="content" name="content" placeholder="write some stuff..."></textarea>
+    </section>
+    <script>
+     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-            <textarea id="content" name="content" placeholder="write some stuff..."></textarea>
-            <div id="height"></div>
-          </section>
+     ga('create', 'UA-66235505-1', 'auto');
+     ga('send', 'pageview');
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"><\/script>')</script>
+    <script src="main.js"></script>
 
-        <script>
-          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-          ga('create', 'UA-66235505-1', 'auto');
-          ga('send', 'pageview');
-        </script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"><\/script>')</script>
-        <script src="main.js"></script>
-
-    </body>
+   </body>
 </html>

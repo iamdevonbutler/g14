@@ -42,16 +42,7 @@ var keyboardjs = require('keyboardjs');
 
       // Listen for remove tab click.
       this.$remove.on('click', (e) => {
-        var state, confirmed, activeKey;
-        state = this.getState();
-        activeKey = this.getActiveKey(state)
-        // Don't delete the only tab.
-        if (Object.keys(state).length <= 1) {
-          return;
-        }
-        // Don't ask for confirmation if there is no content.
-        confirmed = state[activeKey].text ? confirm('You sure bro?') : true;
-        if (confirmed) {
+        if (this.confirmTabRemoval()) {
           this.removeTab();
         }
       });
@@ -80,6 +71,19 @@ var keyboardjs = require('keyboardjs');
         $tab = this.getTabElementByKey(key);
         this.changeTab($tab);
       });
+
+      keyboardjs.bind(['command+d', 'command+r'], (e) => {
+        e.preventDefault();
+        if (this.confirmTabRemoval()) {
+          this.removeTab();
+        }
+      });
+
+      keyboardjs.bind('command+a', (e) => {
+        e.preventDefault();
+        this.addTab();
+      });
+
     },
 
     changeTab($tab) {
@@ -111,6 +115,18 @@ var keyboardjs = require('keyboardjs');
       this.insertText(text);
       this.cacheActiveTab();
       this.setTabName(this.$activeTab, text);
+    },
+
+    confirmTabRemoval() {
+      var state, confirmed, activeKey;
+      state = this.getState();
+      activeKey = this.getActiveKey(state)
+      // Don't delete the only tab.
+      if (Object.keys(state).length <= 1) {
+        return;
+      }
+      // Don't ask for confirmation if there is no content.
+      return state[activeKey].text ? confirm('You sure bro?') : true;
     },
 
     removeTab() {
@@ -163,11 +179,11 @@ var keyboardjs = require('keyboardjs');
 
     setTabName($tab, text) {
       var tabName = text.split('\n')
-        .filter(val => val.trim())
         .filter(Boolean)
-        .shift()
-        .slice(0,15);
-      $tab.text(tabName || '...');
+        .filter(val => val.trim())
+        .shift();
+      tabName = tabName ? tabName.slice(0,15) : '...';
+      $tab.text(tabName);
     },
 
     cacheActiveTab($obj) {
