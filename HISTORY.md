@@ -1,4 +1,13 @@
 
+0.4.1 / 2015-08-12
+==================
+
+  * fixed tab formating issue. partiall fixed tab switching
+  * updated nav bg
+  * added cname
+  * build site
+  * styling enhancements
+
 0.4.0 / 2015-08-11
 ==================
 
