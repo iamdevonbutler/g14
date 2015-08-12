@@ -47,16 +47,16 @@ $transitiontime: .3s;
 }
 
 #navigation {
+  @include clearfix;
   width: 50% !important;
   margin: 0 auto;
-  @include clearfix;
   padding-top: 5px;
   margin-bottom: 35px;
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
-  background: white;
+  background: rgba(255,255,255,.80);
   z-index: 2;
 }
 
