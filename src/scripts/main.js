@@ -162,7 +162,12 @@ var keyboardjs = require('keyboardjs');
     },
 
     setTabName($tab, text) {
-      $tab.text(text.split('\n').shift().slice(0,15) || '...');
+      var tabName = text.split('\n')
+        .filter(val => val.trim())
+        .filter(Boolean)
+        .shift()
+        .slice(0,15);
+      $tab.text(tabName || '...');
     },
 
     cacheActiveTab($obj) {
