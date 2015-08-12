@@ -45,11 +45,16 @@ var keyboardjs = require('keyboardjs');
 
       // Listen for remove tab click.
       this.$remove.on('click', (e) => {
-        var state = this.getState();
+        var state, confirmed, activeKey;
+        state = this.getState();
+        activeKey = this.getActiveKey(state)
+        // Don't delete the only tab.
         if (Object.keys(state).length <= 1) {
           return;
         }
-        if (confirm('You sure bro?')) {
+        // Don't ask for confirmation if there is no content.
+        confirmed = state[activeKey].text ? confirm('You sure bro?') : true;
+        if (confirmed) {
           this.removeTab();
         }
       });
@@ -62,15 +67,21 @@ var keyboardjs = require('keyboardjs');
 
       // Keyboard Shortcuts
       keyboardjs.bind('command+right', (e) => {
+        var state, key, $tab;
         e.preventDefault();
-        var state = this.getState()
-        console.log(this.getTab(state, true));
+        state = this.getState();
+        key = this.getAdjacentTabKey(state, false);
+        $tab = this.getTabElementByKey(key);
+        this.changeTab($tab);
       });
 
       keyboardjs.bind('command+left', (e) => {
+        var state, key, $tab;
         e.preventDefault();
-        var state = this.getState()
-        console.log(this.getTab(state, false));
+        state = this.getState();
+        key = this.getAdjacentTabKey(state, false);
+        $tab = this.getTabElementByKey(key);
+        this.changeTab($tab);
       });
     },
 
@@ -123,7 +134,7 @@ var keyboardjs = require('keyboardjs');
 
     // Will return the first tab if nexted on the last tab.
     // Will return the last tab if prev on the first tab.
-    getTab(state, next = true) {
+    getAdjacentTabKey(state, next = true) {
       var sorted, keys, nextKey, index;
       keys = Object.keys(state);
       sorted = next ? this.sortArray(keys) : this.sortArray(keys).reverse();
@@ -135,7 +146,7 @@ var keyboardjs = require('keyboardjs');
         }
       });
       nextKey = index+1 == keys.length ? sorted[0] : sorted.slice(index+1, index+2);
-      return this.$tabs.find('[data-tab-id="'+nextKey+'"]')
+      return nextKey;
     },
 
     appendTabsToDOM(obj) {
@@ -149,7 +160,7 @@ var keyboardjs = require('keyboardjs');
     },
 
     removeTabFromDOM(key) {
-      this.$tabs.find('.tab[data-tab-id="'+key+'"]').remove();
+      this.getTabElementByKey(key).remove();
       return this;
     },
 
@@ -213,6 +224,10 @@ var keyboardjs = require('keyboardjs');
       var state = {};
       state[Date.now()] = { text: '', active: true };
       return state;
+    },
+
+    getTabElementByKey(key) {
+      return this.$tabs.find('[data-tab-id="'+key+'"]')
     },
 
     replaceObjValues(obj, field, value) {

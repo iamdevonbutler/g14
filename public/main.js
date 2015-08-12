@@ -974,11 +974,16 @@
 
           // Listen for remove tab click.
           this.$remove.on('click', function (e) {
-            var state = _this2.getState();
+            var state, confirmed, activeKey;
+            state = _this2.getState();
+            activeKey = _this2.getActiveKey(state);
+            // Don't delete the only tab.
             if (Object.keys(state).length <= 1) {
               return;
             }
-            if (confirm('You sure bro?')) {
+            // Don't ask for confirmation if there is no content.
+            confirmed = state[activeKey].text ? confirm('You sure bro?') : true;
+            if (confirmed) {
               _this2.removeTab();
             }
           });
@@ -991,15 +996,21 @@
 
           // Keyboard Shortcuts
           keyboardjs.bind('command+right', function (e) {
+            var state, key, $tab;
             e.preventDefault();
-            var state = _this2.getState();
-            console.log(_this2.getTab(state, true));
+            state = _this2.getState();
+            key = _this2.getAdjacentTabKey(state, false);
+            $tab = _this2.getTabElementByKey(key);
+            _this2.changeTab($tab);
           });
 
           keyboardjs.bind('command+left', function (e) {
+            var state, key, $tab;
             e.preventDefault();
-            var state = _this2.getState();
-            console.log(_this2.getTab(state, false));
+            state = _this2.getState();
+            key = _this2.getAdjacentTabKey(state, false);
+            $tab = _this2.getTabElementByKey(key);
+            _this2.changeTab($tab);
           });
         },
 
@@ -1052,7 +1063,7 @@
 
         // Will return the first tab if nexted on the last tab.
         // Will return the last tab if prev on the first tab.
-        getTab: function getTab(state) {
+        getAdjacentTabKey: function getAdjacentTabKey(state) {
           var next = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
           var sorted, keys, nextKey, index;
@@ -1066,7 +1077,7 @@
             }
           });
           nextKey = index + 1 == keys.length ? sorted[0] : sorted.slice(index + 1, index + 2);
-          return this.$tabs.find('[data-tab-id="' + nextKey + '"]');
+          return nextKey;
         },
 
         appendTabsToDOM: function appendTabsToDOM(obj) {
@@ -1080,7 +1091,7 @@
         },
 
         removeTabFromDOM: function removeTabFromDOM(key) {
-          this.$tabs.find('.tab[data-tab-id="' + key + '"]').remove();
+          this.getTabElementByKey(key).remove();
           return this;
         },
 
@@ -1147,6 +1158,10 @@
           var state = {};
           state[Date.now()] = { text: '', active: true };
           return state;
+        },
+
+        getTabElementByKey: function getTabElementByKey(key) {
+          return this.$tabs.find('[data-tab-id="' + key + '"]');
         },
 
         replaceObjValues: function replaceObjValues(obj, field, value) {
