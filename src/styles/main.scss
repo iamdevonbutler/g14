@@ -48,7 +48,7 @@ $transitiontime: .3s;
   @include clearfix;
   width: 50% !important;
   margin: 0 auto;
-  padding-top: 5px;
+  padding-top: 8px;
   margin-bottom: 35px;
   position: absolute;
   left: 0;
@@ -63,7 +63,7 @@ $transitiontime: .3s;
   width: 20px;
   display: inline-block;
   float: left;
-  padding-top: 10px;
+  padding-top: 9px;
 }
 
 #tabs {
@@ -78,37 +78,23 @@ $transitiontime: .3s;
   position: relative;
   float: left;
   display: block;
-  margin: 10px 0;
-  padding: 0 30px;
-  &:first-child {
-    padding-left: 40px;
-  }
-  color: rgba(0,0,0,.35);
-  &:after {
-    content: '';
-    border-right: 1px solid rgba(0,0,0,.2);
-    padding-left: 20px;
-    @include transition(all $transitiontime);
-    top: 0;
-    right: 0;
-    position: absolute;
-    height: 100%;
-  }
+  padding: 8px 14px;
+  margin-right: 10px;
+  background: rgba(0,0,0,.03);
+  color: rgba(0,0,0,.30);
   @include transition(all $transitiontime);
   &:hover {
     color: rgba(0,0,0,.7);
     @include transition(all $transitiontime);
-    &:after {
-      border-color: rgba(0,0,0,.7);
-    }
   }
 }
 
 .tab.active {
-  color: rgba(0,0,0,.65);
-  &:after {
-    border-color: rgba(0,0,0,.65);
-  }
+  color: rgba(0,0,0,.85);
+}
+
+.tab.sortable-ghost {
+  opacity: .3;
 }
 
 #add {

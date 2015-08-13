@@ -796,7 +796,7 @@
 
     var keyboardjs = require('keyboardjs');
 
-    ;(function ($, window, document, localstorage, Modernizr, keyboardjs, undefined) {
+    ;(function ($, window, document, localstorage, Modernizr, Sortable, keyboardjs, undefined) {
 
       var main = {
 
@@ -1099,6 +1099,13 @@
           return !!Modernizr.localstorage;
         },
 
+        initTabSorting: function initTabSorting() {
+          Sortable.create(this.$tabs[0], {
+            animation: 300,
+            onUpdate: function onUpdate(evt) {}
+          });
+        },
+
         // Main method.
         init: function init() {
           var _this4 = this;
@@ -1106,25 +1113,30 @@
           var bindEvents = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
           var text, content, state, $el, key;
+
           if (!this.detectLocalStorage()) {
             alert('Your browser does not support localStorage and thus cannot function in this application.');
             return false;
           }
+
+          // Cache DOM elements.
           this.cache();
 
+          // Get state or set default state.
           state = this.getState();
           if (!state) {
             state = this.getDefaultState();
             this.setState(state);
           }
 
-          // Modify DOM.
+          // Modify DOM w/ tabs.
           this.appendTabsToDOM(state);
           this.$tabs.find('.tab').each(function (i, el) {
             $el = $(el);
             key = $el.attr('data-tab-id');
             _this4.setTabName($el, state[key].text);
           });
+          this.initTabSorting();
 
           this.cacheActiveTab();
           if (bindEvents) {
@@ -1139,5 +1151,5 @@
       $(document).ready(function () {
         main.init();
       });
-    })(jQuery, window, document, localStorage, Modernizr, keyboardjs);
+    })(jQuery, window, document, localStorage, Modernizr, Sortable, keyboardjs);
   }, { "keyboardjs": 1 }] }, {}, [6]);
