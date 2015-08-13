@@ -12,6 +12,7 @@ var uglify = require('gulp-uglify');
 var autoprefixer = require('gulp-autoprefixer');
 var gulpif = require('gulp-if');
 var argv = require('yargs').argv;
+var bourbon = require('node-bourbon');
 
 function onError(err) {
   console.log(err);
@@ -35,7 +36,9 @@ gulp.task('scripts', function() {
 
 gulp.task('styles', function() {
   gulp.src(['src/styles/main.scss'])
-    .pipe(sass())
+    .pipe(sass({
+      includePaths: bourbon.includePaths
+    }))
     .on('error', onError)
     .pipe(autoprefixer({
         browsers: ['last 2 versions'],

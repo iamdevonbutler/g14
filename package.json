@@ -24,6 +24,7 @@
     "gulp-watch": "4.3.4",
     "keyboardjs": "^2.1.1",
     "local-storage": "1.4.2",
+    "node-bourbon": "^4.2.3",
     "yargs": "^3.18.0"
   }
 }

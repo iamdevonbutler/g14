@@ -45,10 +45,10 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-.clearfix:after {
+.clearfix::after {
+  clear: both;
   content: "";
-  display: table;
-  clear: both; }
+  display: table; }
 
 #text {
   font-size: 1em !important;
@@ -78,10 +78,10 @@ table {
   top: 0;
   background: rgba(255, 255, 255, 0.8);
   z-index: 2; }
-  #navigation:after {
+  #navigation::after {
+    clear: both;
     content: "";
-    display: table;
-    clear: both; }
+    display: table; }
 
 .icon {
   font-size: 12px;
@@ -98,10 +98,10 @@ table {
   -moz-user-select: none;
   -khtml-user-select: none;
   -ms-user-select: none; }
-  #tabs:after {
+  #tabs::after {
+    clear: both;
     content: "";
-    display: table;
-    clear: both; }
+    display: table; }
 
 .tab {
   position: relative;

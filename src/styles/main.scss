@@ -1,20 +1,9 @@
 @import "reset";
+@import "bourbon";
 
-@mixin clearfix {
-  &:after {
-    content: "";
-    display: table;
-    clear: both;
-  }
-}
-
-@mixin transition($transition...) {
-  -moz-transition:    $transition;
-  -o-transition:      $transition;
-  -webkit-transition: $transition;
-  transition:         $transition;
-}
-
+//
+// Mixins.
+//
 @mixin userselect($value) {
   -webkit-user-select: $value;
   -moz-user-select: $value;
@@ -22,12 +11,21 @@
   -ms-user-select: $value;
 }
 
+//
+// OOCSS.
+//
 .clearfix {
   @include clearfix();
 }
 
+//
+// Variables.
+//
 $transitiontime: .3s;
 
+//
+// Styling.
+//
 #text {
   font-size: 1em !important;
   font-family: georgia, serif !important;
