@@ -2,7 +2,7 @@
 
 var keyboardjs = require('keyboardjs');
 
-;(function($, window, document, localstorage, keyboardjs, undefined) {
+;(function($, window, document, localstorage, Modernizr, keyboardjs, undefined) {
 
   var main = {
 
@@ -296,9 +296,17 @@ var keyboardjs = require('keyboardjs');
       });
     },
 
+    detectLocalStorage() {
+      return !!Modernizr.localstorage;
+    },
+
     // Main method.
     init(bindEvents = true) {
       var text, content, state, $el, key;
+      if (!this.detectLocalStorage()) {
+        alert('Your browser does not support localStorage and thus cannot function in this application.');
+        return false;
+      }
       this.cache();
 
       state = this.getState();
@@ -329,4 +337,4 @@ var keyboardjs = require('keyboardjs');
     main.init();
   });
 
-})(jQuery, window, document, localStorage, keyboardjs);
+})(jQuery, window, document, localStorage, Modernizr, keyboardjs);
