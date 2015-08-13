@@ -792,143 +792,8 @@
       locale.setKillKey('command');
     };
   }, {}], 6: [function (require, module, exports) {
-    (function (global) {
-      'use strict';
-
-      var stub = require('./stub');
-      var tracking = require('./tracking');
-      var ls = 'localStorage' in global && global.localStorage ? global.localStorage : stub;
-
-      function accessor(key, value) {
-        if (arguments.length === 1) {
-          return get(key);
-        }
-        return set(key, value);
-      }
-
-      function get(key) {
-        return JSON.parse(ls.getItem(key));
-      }
-
-      function set(key, value) {
-        try {
-          ls.setItem(key, JSON.stringify(value));
-          return true;
-        } catch (e) {
-          return false;
-        }
-      }
-
-      function remove(key) {
-        return ls.removeItem(key);
-      }
-
-      function clear() {
-        return ls.clear();
-      }
-
-      accessor.set = set;
-      accessor.get = get;
-      accessor.remove = remove;
-      accessor.clear = clear;
-      accessor.on = tracking.on;
-      accessor.off = tracking.off;
-
-      module.exports = accessor;
-    }).call(this, typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-  }, { "./stub": 7, "./tracking": 8 }], 7: [function (require, module, exports) {
     'use strict';
 
-    var ms = {};
-
-    function getItem(key) {
-      return key in ms ? ms[key] : null;
-    }
-
-    function setItem(key, value) {
-      ms[key] = value;
-      return true;
-    }
-
-    function removeItem(key) {
-      var found = (key in ms);
-      if (found) {
-        return delete ms[key];
-      }
-      return false;
-    }
-
-    function clear() {
-      ms = {};
-      return true;
-    }
-
-    module.exports = {
-      getItem: getItem,
-      setItem: setItem,
-      removeItem: removeItem,
-      clear: clear
-    };
-  }, {}], 8: [function (require, module, exports) {
-    (function (global) {
-      'use strict';
-
-      var listeners = {};
-      var listening = false;
-
-      function listen() {
-        if (global.addEventListener) {
-          global.addEventListener('storage', change, false);
-        } else if (global.attachEvent) {
-          global.attachEvent('onstorage', change);
-        } else {
-          global.onstorage = change;
-        }
-      }
-
-      function change(e) {
-        if (!e) {
-          e = global.event;
-        }
-        var all = listeners[e.key];
-        if (all) {
-          all.forEach(fire);
-        }
-
-        function fire(listener) {
-          listener(JSON.parse(e.newValue), JSON.parse(e.oldValue), e.url || e.uri);
-        }
-      }
-
-      function on(key, fn) {
-        if (listeners[key]) {
-          listeners[key].push(fn);
-        } else {
-          listeners[key] = [fn];
-        }
-        if (listening === false) {
-          listen();
-        }
-      }
-
-      function off(key, fn) {
-        var ns = listeners[key];
-        if (ns.length > 1) {
-          ns.splice(ns.indexOf(fn), 1);
-        } else {
-          listeners[key] = [];
-        }
-      }
-
-      module.exports = {
-        on: on,
-        off: off
-      };
-    }).call(this, typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {});
-  }, {}], 9: [function (require, module, exports) {
-    'use strict';
-
-    var localstorage = require('local-storage');
     var keyboardjs = require('keyboardjs');
 
     ;(function ($, window, document, localstorage, keyboardjs, undefined) {
@@ -936,6 +801,7 @@
       var main = {
 
         cache: function cache() {
+          this.$window = $(window);
           this.$document = $(document);
           this.$text = $('#text');
           this.$tabs = $('#tabs');
@@ -948,7 +814,7 @@
           var _this2 = this;
 
           // Track and save content.
-          this.$document.on('keyup', '#content', function () {
+          this.$document.on('keyup', '#text', function () {
             var state, key, text;
             state = _this2.getState();
             key = _this2.getActiveKey();
@@ -957,8 +823,9 @@
             _this2.setState(state);
             _this2.setTabName(_this2.$activeTab, text);
           });
+
           // Prevent g14 open in another window from overriding content. Sync windows.
-          localstorage.on('content', function (content) {
+          this.$window.on('storage', function (content) {
             _this2.$tabs.html('');
             _this2.$text.val('');
             _this2.init(false);
@@ -1155,14 +1022,28 @@
         setState: function setState(state) {
           var key = arguments.length <= 1 || arguments[1] === undefined ? 'content' : arguments[1];
 
-          localstorage.set(key, state);
+          var stringedState;
+          try {
+            stringedState = JSON.stringify(state);
+            localStorage.setItem(key, stringedState);
+          } catch (err) {
+            alert('Something went down when trying to save your stuff');
+            console.log(err);
+          }
           return this;
         },
 
         getState: function getState() {
           var key = arguments.length <= 0 || arguments[0] === undefined ? 'content' : arguments[0];
 
-          return localstorage.get(key);
+          var state;
+          try {
+            state = localStorage.getItem(key);
+            return JSON.parse(state);
+          } catch (err) {
+            alert('Something went down when trying to get your stuff');
+            console.log(err);
+          }
         },
 
         getActiveState: function getActiveState() {
@@ -1250,5 +1131,5 @@
       $(document).ready(function () {
         main.init();
       });
-    })(jQuery, window, document, localstorage, keyboardjs);
-  }, { "keyboardjs": 1, "local-storage": 6 }] }, {}, [9]);
+    })(jQuery, window, document, localStorage, keyboardjs);
+  }, { "keyboardjs": 1 }] }, {}, [6]);

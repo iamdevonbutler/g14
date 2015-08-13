@@ -1,6 +1,5 @@
 'use strict';
 
-var localstorage = require('local-storage');
 var keyboardjs = require('keyboardjs');
 
 ;(function($, window, document, localstorage, keyboardjs, undefined) {
@@ -8,6 +7,7 @@ var keyboardjs = require('keyboardjs');
   var main = {
 
     cache() {
+      this.$window = $(window);
       this.$document = $(document);
       this.$text = $('#text');
       this.$tabs = $('#tabs');
@@ -18,7 +18,7 @@ var keyboardjs = require('keyboardjs');
 
     bindEvents() {
       // Track and save content.
-      this.$document.on('keyup', '#content', () => {
+      this.$document.on('keyup', '#text', () => {
         var state, key, text;
         state = this.getState();
         key = this.getActiveKey();
@@ -27,8 +27,9 @@ var keyboardjs = require('keyboardjs');
         this.setState(state);
         this.setTabName(this.$activeTab, text);
       });
+
       // Prevent g14 open in another window from overriding content. Sync windows.
-      localstorage.on('content', content => {
+      this.$window.on('storage', content => {
         this.$tabs.html('');
         this.$text.val('');
         this.init(false);
@@ -227,12 +228,28 @@ var keyboardjs = require('keyboardjs');
     },
 
     setState(state, key = 'content') {
-      localstorage.set(key, state);
+      var stringedState;
+      try {
+        stringedState = JSON.stringify(state);
+        localStorage.setItem(key, stringedState);
+      }
+      catch (err) {
+        alert('Something went down when trying to save your stuff');
+        console.log(err);
+      }
       return this;
     },
 
     getState(key = 'content') {
-      return localstorage.get(key);
+      var state;
+      try {
+        state = localStorage.getItem(key);
+        return JSON.parse(state);
+      }
+      catch (err) {
+        alert('Something went down when trying to get your stuff');
+        console.log(err);
+      }
     },
 
     getActiveState(state = this.getState()) {
@@ -312,4 +329,4 @@ var keyboardjs = require('keyboardjs');
     main.init();
   });
 
-})(jQuery, window, document, localstorage, keyboardjs);
+})(jQuery, window, document, localStorage, keyboardjs);
