@@ -9,7 +9,7 @@ var keyboardjs = require('keyboardjs');
 
     cache() {
       this.$document = $(document);
-      this.$content = $('#content');
+      this.$text = $('#text');
       this.$tabs = $('#tabs');
       this.$add = $('#add');
       this.$remove = $('#remove');
@@ -30,7 +30,7 @@ var keyboardjs = require('keyboardjs');
       // Prevent g14 open in another window from overriding content. Sync windows.
       localstorage.on('content', content => {
         this.$tabs.html('');
-        this.$content.val('');
+        this.$text.val('');
         this.init(false);
       });
 
@@ -38,6 +38,7 @@ var keyboardjs = require('keyboardjs');
       this.$add.on('click', (e) => {
         // Add tab to DOM
         this.addTab();
+        this.focusOnText();
       });
 
       // Listen for remove tab click.
@@ -78,6 +79,7 @@ var keyboardjs = require('keyboardjs');
         e.preventDefault();
         if (this.confirmTabRemoval()) {
           this.removeTab();
+          this.focusOnText();
         }
       });
 
@@ -85,8 +87,13 @@ var keyboardjs = require('keyboardjs');
       keyboardjs.bind('command+e', (e) => {
         e.preventDefault();
         this.addTab();
+        this.focusOnText();
       });
 
+    },
+
+    focusOnText() {
+      this.$text.focus();
     },
 
     changeTab($tab) {
@@ -154,11 +161,9 @@ var keyboardjs = require('keyboardjs');
     // Will return the first tab if nexted on the last tab.
     // Will return the last tab if prev on the first tab.
     getAdjacentTabKey(state = this.getState(), next = true) {
-      console.log(next);
       var sorted, keys, nextKey, index;
       keys = Object.keys(state);
       sorted = next ? this.sortArray(keys) : this.sortArray(keys).reverse();
-      console.log(sorted);
       var index;
       keys.forEach((key,i) => {
         if (state[key].active) {
@@ -213,11 +218,11 @@ var keyboardjs = require('keyboardjs');
     },
 
     getText() {
-      return this.$content.val();
+      return this.$text.val();
     },
 
     insertText(content) {
-      this.$content.val(content);
+      this.$text.val(content);
       return this;
     },
 
