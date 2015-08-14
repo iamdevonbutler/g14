@@ -157,7 +157,7 @@ var keyboardjs = require('keyboardjs');
       this.cacheActiveTab();
     },
 
-    updateTabIndexInDOM(currentIndex) {
+    updateTabIndexInDOM() {
       this.$tabs.find('.tab').each((index, el) => {
         $(el).attr('data-tab-order', index);
       });
@@ -298,9 +298,38 @@ var keyboardjs = require('keyboardjs');
       Sortable.create(this.$tabs[0], {
         animation: 300,
         onUpdate: evt => {
-          console.log(22828383829);
+          var right, state, array = [];
+          this.updateTabIndexInDOM();
+          state = this.getState();
+          // If the item was moved to the right.
+          state.forEach((obj, index) => {
+            right = evt.newIndex > evt.oldIndex ? true : false;
+            // Reorder item that was moved.
+            if (evt.oldIndex == index) {
+              array[evt.newIndex] = obj;
+            }
+            // Reorder item(s) that took moved items's place.
+            // If the item was moved to the right.
+            else if (right && evt.newIndex >= index &&  index > evt.oldIndex) {
+              array[index - 1] = obj;
+            }
+            // If the item was moved to the left.
+            else if (!right && evt.newIndex <= index && index < evt.oldIndex) {
+              array[index + 1] = obj;
+            }
+            // If the item was not moved at all.
+            else {
+               array[index] = obj
+            }
+          });
+          this.setState(array);
         },
       });
+    },
+
+    moveArrayItems(array, from, to) {
+      array.splice(to, 0, array.splice(from, 1)[0]);
+      return this;
     },
 
     normalizeLegacyState(obj) {

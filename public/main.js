@@ -952,7 +952,7 @@
           this.cacheActiveTab();
         },
 
-        updateTabIndexInDOM: function updateTabIndexInDOM(currentIndex) {
+        updateTabIndexInDOM: function updateTabIndexInDOM() {
           this.$tabs.find('.tab').each(function (index, el) {
             $(el).attr('data-tab-order', index);
           });
@@ -1095,12 +1095,45 @@
         },
 
         initTabSorting: function initTabSorting() {
+          var _this4 = this;
+
           Sortable.create(this.$tabs[0], {
             animation: 300,
             onUpdate: function onUpdate(evt) {
-              console.log(22828383829);
+              var right,
+                  state,
+                  array = [];
+              _this4.updateTabIndexInDOM();
+              state = _this4.getState();
+              // If the item was moved to the right.
+              state.forEach(function (obj, index) {
+                right = evt.newIndex > evt.oldIndex ? true : false;
+                // Reorder item that was moved.
+                if (evt.oldIndex == index) {
+                  array[evt.newIndex] = obj;
+                }
+                // Reorder item(s) that took moved items's place.
+                // If the item was moved to the right.
+                else if (right && evt.newIndex >= index && index > evt.oldIndex) {
+                    array[index - 1] = obj;
+                  }
+                  // If the item was moved to the left.
+                  else if (!right && evt.newIndex <= index && index < evt.oldIndex) {
+                      array[index + 1] = obj;
+                    }
+                    // If the item was not moved at all.
+                    else {
+                        array[index] = obj;
+                      }
+              });
+              _this4.setState(array);
             }
           });
+        },
+
+        moveArrayItems: function moveArrayItems(array, from, to) {
+          array.splice(to, 0, array.splice(from, 1)[0]);
+          return this;
         },
 
         normalizeLegacyState: function normalizeLegacyState(obj) {
@@ -1113,7 +1146,7 @@
 
         // Main method.
         init: function init() {
-          var _this4 = this;
+          var _this5 = this;
 
           var bindEvents = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
@@ -1141,7 +1174,7 @@
           this.$tabs.find('.tab').each(function (i, el) {
             $el = $(el);
             tabIndex = $el.attr('data-tab-order');
-            _this4.setTabName($el, state[tabIndex].text);
+            _this5.setTabName($el, state[tabIndex].text);
           });
           this.initTabSorting();
 
