@@ -106,7 +106,7 @@ var keyboardjs = require('keyboardjs');
         state = this.changeObjInArrayValue(state, 'active', false);
         state[newIndex].active = true;
         this.setState(state);
-        this.changeActiveTab(newIndex);
+        this.updateActiveTabDOMAttr(newIndex);
         this.insertText(state[newIndex].text);
         this.cacheActiveTab($tab);
       }
@@ -114,19 +114,19 @@ var keyboardjs = require('keyboardjs');
 
     // @todo this method does too much.
     addTab() {
-      var state, newState, newStateKey,text;
+      var state, newState, newStateIndex, text;
       state = this.getState();
       newState = this.getDefaultState()[0]; // Array /w obj.
-      newStateIndex = state.length + 1;
+      newStateIndex = state.length;
       state = this.changeObjInArrayValue(state, 'active', false);
       state.push(newState);
       text = newState.text;
       this.setState(state);
-      this.appendTabsToDOM([newState]);
-      this.changeActiveTab(newStateIndex);
+      this.appendTabsToDOM([newState], newStateIndex);
+      this.updateActiveTabDOMAttr(newStateIndex);
+      this.cacheActiveTab();
       this.insertText(text);
       this.setTabName(this.$activeTab, text);
-      this.cacheActiveTab();
     },
 
     confirmTabRemoval() {
@@ -147,14 +147,20 @@ var keyboardjs = require('keyboardjs');
       index = this.getActiveIndex();
       state = this.getState();
       state.splice(index, 1);
-      // state = state.map((obj, index) => obj);
       newIndex = state.length == index ? index - 1 : index;
       state[newIndex].active = true;
       this.setState(state);
       this.removeTabFromDOM(index);
-      this.changeActiveTab(newIndex);
+      this.updateTabIndexInDOM();
+      this.updateActiveTabDOMAttr(newIndex);
       this.insertText(state[newIndex].text);
       this.cacheActiveTab();
+    },
+
+    updateTabIndexInDOM(currentIndex) {
+      this.$tabs.find('.tab').each((index, el) => {
+        $(el).attr('data-tab-order', index);
+      });
     },
 
     // Set next to false to get the previous key.
@@ -171,11 +177,11 @@ var keyboardjs = require('keyboardjs');
       }
     },
 
-    appendTabsToDOM(state) {
+    appendTabsToDOM(state, pos) {
       state.forEach((obj, index) => {
         var html = (obj.active)
-          ? '<li class="tab active" data-tab-order="'+index+'"></li>'
-          : '<li class="tab" data-tab-order="'+index+'"></li>';
+          ? '<li class="tab active" data-tab-order="'+(pos||index)+'"></li>'
+          : '<li class="tab" data-tab-order="'+(pos||index)+'"></li>';
         this.$tabs.append(html);
       });
       return this;
@@ -200,7 +206,7 @@ var keyboardjs = require('keyboardjs');
       return this;
     },
 
-    changeActiveTab(index) {
+    updateActiveTabDOMAttr(index) {
       this.$tabs
         .find('.tab')
         .removeClass('active')
@@ -213,8 +219,8 @@ var keyboardjs = require('keyboardjs');
       return this.$text.val();
     },
 
-    insertText(content) {
-      this.$text.val(content);
+    insertText(text) {
+      this.$text.val(text);
       return this;
     },
 
@@ -265,7 +271,7 @@ var keyboardjs = require('keyboardjs');
     // Returns state for a new/blank tab.
     getDefaultState() {
       var state = [];
-      state.push({ text: '', active: true, order: 0 });
+      state.push({ text: '', active: true });
       return state;
     },
 
@@ -284,13 +290,6 @@ var keyboardjs = require('keyboardjs');
       return clone;
     },
 
-    // Sort numbers asc order.
-    // sortArray(obj) {
-    //   return obj.sort((a, b) => {
-    //      return a > b ? 1 : a < b ? -1 : 0;
-    //   });
-    // },
-
     detectLocalStorage() {
       return !!Modernizr.localstorage;
     },
@@ -299,7 +298,6 @@ var keyboardjs = require('keyboardjs');
       Sortable.create(this.$tabs[0], {
         animation: 300,
         onUpdate: evt => {
-          // @todo do Something
           console.log(22828383829);
         },
       });
@@ -308,7 +306,6 @@ var keyboardjs = require('keyboardjs');
     normalizeLegacyState(obj) {
       var array = [];
       Object.keys(obj).forEach((key, index) => {
-        obj[key].order = index;
         array.push(obj[key]);
       });
       return array;

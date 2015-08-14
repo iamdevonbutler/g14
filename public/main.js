@@ -901,7 +901,7 @@
             state = this.changeObjInArrayValue(state, 'active', false);
             state[newIndex].active = true;
             this.setState(state);
-            this.changeActiveTab(newIndex);
+            this.updateActiveTabDOMAttr(newIndex);
             this.insertText(state[newIndex].text);
             this.cacheActiveTab($tab);
           }
@@ -909,19 +909,19 @@
 
         // @todo this method does too much.
         addTab: function addTab() {
-          var state, newState, newStateKey, text;
+          var state, newState, newStateIndex, text;
           state = this.getState();
           newState = this.getDefaultState()[0]; // Array /w obj.
-          newStateIndex = state.length + 1;
+          newStateIndex = state.length;
           state = this.changeObjInArrayValue(state, 'active', false);
           state.push(newState);
           text = newState.text;
           this.setState(state);
-          this.appendTabsToDOM([newState]);
-          this.changeActiveTab(newStateIndex);
+          this.appendTabsToDOM([newState], newStateIndex);
+          this.updateActiveTabDOMAttr(newStateIndex);
+          this.cacheActiveTab();
           this.insertText(text);
           this.setTabName(this.$activeTab, text);
-          this.cacheActiveTab();
         },
 
         confirmTabRemoval: function confirmTabRemoval() {
@@ -942,14 +942,20 @@
           index = this.getActiveIndex();
           state = this.getState();
           state.splice(index, 1);
-          // state = state.map((obj, index) => obj);
           newIndex = state.length == index ? index - 1 : index;
           state[newIndex].active = true;
           this.setState(state);
           this.removeTabFromDOM(index);
-          this.changeActiveTab(newIndex);
+          this.updateTabIndexInDOM();
+          this.updateActiveTabDOMAttr(newIndex);
           this.insertText(state[newIndex].text);
           this.cacheActiveTab();
+        },
+
+        updateTabIndexInDOM: function updateTabIndexInDOM(currentIndex) {
+          this.$tabs.find('.tab').each(function (index, el) {
+            $(el).attr('data-tab-order', index);
+          });
         },
 
         // Set next to false to get the previous key.
@@ -967,11 +973,11 @@
           }
         },
 
-        appendTabsToDOM: function appendTabsToDOM(state) {
+        appendTabsToDOM: function appendTabsToDOM(state, pos) {
           var _this3 = this;
 
           state.forEach(function (obj, index) {
-            var html = obj.active ? '<li class="tab active" data-tab-order="' + index + '"></li>' : '<li class="tab" data-tab-order="' + index + '"></li>';
+            var html = obj.active ? '<li class="tab active" data-tab-order="' + (pos || index) + '"></li>' : '<li class="tab" data-tab-order="' + (pos || index) + '"></li>';
             _this3.$tabs.append(html);
           });
           return this;
@@ -997,7 +1003,7 @@
           return this;
         },
 
-        changeActiveTab: function changeActiveTab(index) {
+        updateActiveTabDOMAttr: function updateActiveTabDOMAttr(index) {
           this.$tabs.find('.tab').removeClass('active').filter('[data-tab-order="' + index + '"]').addClass('active');
           return this;
         },
@@ -1006,8 +1012,8 @@
           return this.$text.val();
         },
 
-        insertText: function insertText(content) {
-          this.$text.val(content);
+        insertText: function insertText(text) {
+          this.$text.val(text);
           return this;
         },
 
@@ -1064,7 +1070,7 @@
         // Returns state for a new/blank tab.
         getDefaultState: function getDefaultState() {
           var state = [];
-          state.push({ text: '', active: true, order: 0 });
+          state.push({ text: '', active: true });
           return state;
         },
 
@@ -1084,13 +1090,6 @@
           return clone;
         },
 
-        // Sort numbers asc order.
-        // sortArray(obj) {
-        //   return obj.sort((a, b) => {
-        //      return a > b ? 1 : a < b ? -1 : 0;
-        //   });
-        // },
-
         detectLocalStorage: function detectLocalStorage() {
           return !!Modernizr.localstorage;
         },
@@ -1099,7 +1098,6 @@
           Sortable.create(this.$tabs[0], {
             animation: 300,
             onUpdate: function onUpdate(evt) {
-              // @todo do Something
               console.log(22828383829);
             }
           });
@@ -1108,7 +1106,6 @@
         normalizeLegacyState: function normalizeLegacyState(obj) {
           var array = [];
           Object.keys(obj).forEach(function (key, index) {
-            obj[key].order = index;
             array.push(obj[key]);
           });
           return array;
