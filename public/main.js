@@ -817,7 +817,7 @@
           this.$document.on('keyup', '#text', function () {
             var state, key, text;
             state = _this2.getState();
-            key = _this2.getActiveKey();
+            key = _this2.getActiveIndex();
             text = _this2.getText();
             state[key].text = text;
             _this2.setState(state);
@@ -853,21 +853,21 @@
 
           // Switch tab right.
           keyboardjs.bind('command+right', function (e) {
-            var state, key, $tab;
+            var state, index, $tab;
             e.preventDefault();
             state = _this2.getState();
-            key = _this2.getAdjacentTabKey(state, true);
-            $tab = _this2.getTabElementByKey(key);
+            index = _this2.getAdjacentTabIndex(state, true);
+            $tab = _this2.getTabElementByIndex(index);
             _this2.changeTab($tab);
           });
 
           // Switch tab left.
           keyboardjs.bind('command+left', function (e) {
-            var state, key, $tab;
+            var state, index, $tab;
             e.preventDefault();
             state = _this2.getState();
-            key = _this2.getAdjacentTabKey(state, false);
-            $tab = _this2.getTabElementByKey(key);
+            index = _this2.getAdjacentTabIndex(state, false);
+            $tab = _this2.getTabElementByIndex(index);
             _this2.changeTab($tab);
           });
 
@@ -893,16 +893,16 @@
         },
 
         changeTab: function changeTab($tab) {
-          var activeKey, newActiveKey, state;
-          activeKey = this.getActiveKey();
-          newActiveKey = $tab.attr('data-tab-id');
-          if (activeKey != newActiveKey) {
+          var index, newIndex, state;
+          index = this.getActiveIndex();
+          newIndex = $tab.attr('data-tab-order');
+          if (index != newIndex) {
             state = this.getState();
-            state = this.replaceObjValues(state, 'active', false);
-            state[newActiveKey].active = true;
+            state = this.changeObjInArrayValue(state, 'active', false);
+            state[newIndex].active = true;
             this.setState(state);
-            this.changeActiveTab(newActiveKey);
-            this.insertText(state[newActiveKey].text);
+            this.changeActiveTab(newIndex);
+            this.insertText(state[newIndex].text);
             this.cacheActiveTab($tab);
           }
         },
@@ -911,80 +911,74 @@
         addTab: function addTab() {
           var state, newState, newStateKey, text;
           state = this.getState();
-          newState = this.getDefaultState();
-          newStateKey = Object.keys(newState).toString();
-          state = this.replaceObjValues(state, 'active', false);
-          $.extend(state, newState);
-          text = newState[newStateKey].text;
+          newState = this.getDefaultState()[0]; // Array /w obj.
+          newStateIndex = state.length + 1;
+          state = this.changeObjInArrayValue(state, 'active', false);
+          state.push(newState);
+          text = newState.text;
           this.setState(state);
-          this.appendTabsToDOM(newState);
-          this.changeActiveTab(newStateKey);
+          this.appendTabsToDOM([newState]);
+          this.changeActiveTab(newStateIndex);
           this.insertText(text);
-          this.cacheActiveTab();
           this.setTabName(this.$activeTab, text);
+          this.cacheActiveTab();
         },
 
         confirmTabRemoval: function confirmTabRemoval() {
-          var state, confirmed, activeKey;
+          var state, confirmed, activeIndex;
           state = this.getState();
-          activeKey = this.getActiveKey(state);
+          activeIndex = this.getActiveIndex(state);
           // Don't delete the only tab.
-          if (Object.keys(state).length <= 1) {
+          if (state.length <= 1) {
             return false;
           }
           // Don't ask for confirmation if there is no content.
-          return state[activeKey].text ? confirm('You sure bro?') : true;
+          return state[activeIndex].text ? confirm('You sure bro?') : true;
         },
 
         // @todo this method does too much.
         removeTab: function removeTab() {
-          var key, state, newKey;
-          key = this.getActiveKey();
+          var index, state, newIndex;
+          index = this.getActiveIndex();
           state = this.getState();
-          delete state[key];
-          var newKey = Object.keys(state).reduce(function (prev, current) {
-            return current > prev ? current : prev;
-          }, '0');
-          state[newKey].active = true;
+          state.splice(index, 1);
+          // state = state.map((obj, index) => obj);
+          newIndex = state.length == index ? index - 1 : index;
+          state[newIndex].active = true;
           this.setState(state);
-          this.removeTabFromDOM(key);
-          this.changeActiveTab(newKey);
-          this.insertText(state[newKey].text);
+          this.removeTabFromDOM(index);
+          this.changeActiveTab(newIndex);
+          this.insertText(state[newIndex].text);
           this.cacheActiveTab();
         },
 
         // Set next to false to get the previous key.
         // Will return the first tab if nexted on the last tab.
         // Will return the last tab if prev on the first tab.
-        getAdjacentTabKey: function getAdjacentTabKey() {
-          var state = arguments.length <= 0 || arguments[0] === undefined ? this.getState() : arguments[0];
-          var next = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+        getAdjacentTabIndex: function getAdjacentTabIndex(state, next) {
+          if (state === undefined) state = this.getState();
 
-          var sorted, keys, nextKey, index;
-          keys = Object.keys(state);
-          sorted = next ? this.sortArray(keys) : this.sortArray(keys).reverse();
-          var index;
-          keys.forEach(function (key, i) {
-            if (state[key].active) {
-              index = i;
-            }
-          });
-          nextKey = index + 1 == keys.length ? sorted[0] : sorted.slice(index + 1, index + 2);
-          return nextKey;
+          var index = this.getActiveIndex(state);
+
+          if (next) {
+            return index + 1 == state.length ? 0 : index + 1;
+          } else {
+            return index == 0 ? state.length - 1 : index - 1;
+          }
         },
 
-        appendTabsToDOM: function appendTabsToDOM(obj) {
+        appendTabsToDOM: function appendTabsToDOM(state) {
           var _this3 = this;
 
-          Object.keys(obj).forEach(function (key) {
-            var html = obj[key].active ? '<li class="tab active" data-tab-id="' + key + '"></li>' : '<li class="tab" data-tab-id="' + key + '"></li>';
+          state.forEach(function (obj, index) {
+            var html = obj.active ? '<li class="tab active" data-tab-order="' + index + '"></li>' : '<li class="tab" data-tab-order="' + index + '"></li>';
             _this3.$tabs.append(html);
           });
           return this;
         },
 
-        removeTabFromDOM: function removeTabFromDOM(key) {
-          this.getTabElementByKey(key).remove();
+        removeTabFromDOM: function removeTabFromDOM(index) {
+          this.getTabElementByIndex(index).remove();
           return this;
         },
 
@@ -996,17 +990,15 @@
           $tab.text(tabName);
         },
 
-        cacheActiveTab: function cacheActiveTab($obj) {
-          if (!$obj) {
-            this.$activeTab = $('#tabs .tab.active');
-          } else {
-            this.$activeTab = $obj;
-          }
+        cacheActiveTab: function cacheActiveTab() {
+          var $obj = arguments.length <= 0 || arguments[0] === undefined ? $('#tabs .tab.active') : arguments[0];
+
+          this.$activeTab = $obj;
           return this;
         },
 
-        changeActiveTab: function changeActiveTab(key) {
-          this.$tabs.find('.tab').removeClass('active').filter('[data-tab-id="' + key + '"]').addClass('active');
+        changeActiveTab: function changeActiveTab(index) {
+          this.$tabs.find('.tab').removeClass('active').filter('[data-tab-order="' + index + '"]').addClass('active');
           return this;
         },
 
@@ -1039,7 +1031,11 @@
           var state;
           try {
             state = localStorage.getItem(key);
-            return JSON.parse(state);
+            state = JSON.parse(state);
+            // Normalize state from an object to array if exists.
+            // For compatibility reasons.
+            state = $.isPlainObject(state) ? this.normalizeLegacyState(state) : state;
+            return state;
           } catch (err) {
             alert('Something went down when trying to get your stuff');
             console.log(err);
@@ -1049,51 +1045,51 @@
         getActiveState: function getActiveState() {
           var state = arguments.length <= 0 || arguments[0] === undefined ? this.getState() : arguments[0];
 
-          var key = this.getActiveKey(state);
-          return state[key];
+          var index = this.getActiveIndex(state);
+          return state[index];
         },
 
-        getActiveKey: function getActiveKey() {
+        getActiveIndex: function getActiveIndex() {
           var state = arguments.length <= 0 || arguments[0] === undefined ? this.getState() : arguments[0];
 
-          var activeKey = {};
-          Object.keys(state).forEach(function (key) {
-            if (state[key].active) {
-              activeKey = key;
+          var activeIndex;
+          state.forEach(function (obj, index) {
+            if (obj.active) {
+              activeIndex = index;
             }
           });
-          return activeKey;
+          return activeIndex;
         },
 
         // Returns state for a new/blank tab.
         getDefaultState: function getDefaultState() {
-          var state = {};
-          state[Date.now()] = { text: '', active: true };
+          var state = [];
+          state.push({ text: '', active: true, order: 0 });
           return state;
         },
 
         // Select tab from DOM. return jQuery element
-        getTabElementByKey: function getTabElementByKey(key) {
-          return this.$tabs.find('[data-tab-id="' + key + '"]');
+        getTabElementByIndex: function getTabElementByIndex(index) {
+          return this.$tabs.find('[data-tab-order="' + index + '"]');
         },
 
-        replaceObjValues: function replaceObjValues(obj, field, value) {
+        changeObjInArrayValue: function changeObjInArrayValue(array, field, value) {
           // Not by ref.
-          var o = {},
+          var o = [],
               clone;
-          clone = $.extend({}, obj);
-          Object.keys(clone).forEach(function (key) {
-            clone[key][field] = value;
+          clone = $.extend([], array);
+          clone.forEach(function (obj, index) {
+            obj[field] = value;
           });
           return clone;
         },
 
         // Sort numbers asc order.
-        sortArray: function sortArray(obj) {
-          return obj.sort(function (a, b) {
-            return a > b ? 1 : a < b ? -1 : 0;
-          });
-        },
+        // sortArray(obj) {
+        //   return obj.sort((a, b) => {
+        //      return a > b ? 1 : a < b ? -1 : 0;
+        //   });
+        // },
 
         detectLocalStorage: function detectLocalStorage() {
           return !!Modernizr.localstorage;
@@ -1102,8 +1098,20 @@
         initTabSorting: function initTabSorting() {
           Sortable.create(this.$tabs[0], {
             animation: 300,
-            onUpdate: function onUpdate(evt) {}
+            onUpdate: function onUpdate(evt) {
+              // @todo do Something
+              console.log(22828383829);
+            }
           });
+        },
+
+        normalizeLegacyState: function normalizeLegacyState(obj) {
+          var array = [];
+          Object.keys(obj).forEach(function (key, index) {
+            obj[key].order = index;
+            array.push(obj[key]);
+          });
+          return array;
         },
 
         // Main method.
@@ -1112,7 +1120,7 @@
 
           var bindEvents = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
-          var text, content, state, $el, key;
+          var text, content, state, $el, tabIndex;
 
           if (!this.detectLocalStorage()) {
             alert('Your browser does not support localStorage and thus cannot function in this application.');
@@ -1124,6 +1132,7 @@
 
           // Get state or set default state.
           state = this.getState();
+
           if (!state) {
             state = this.getDefaultState();
             this.setState(state);
@@ -1131,10 +1140,11 @@
 
           // Modify DOM w/ tabs.
           this.appendTabsToDOM(state);
+          // Set tabnames.
           this.$tabs.find('.tab').each(function (i, el) {
             $el = $(el);
-            key = $el.attr('data-tab-id');
-            _this4.setTabName($el, state[key].text);
+            tabIndex = $el.attr('data-tab-order');
+            _this4.setTabName($el, state[tabIndex].text);
           });
           this.initTabSorting();
 
