@@ -50,38 +50,27 @@ table {
   content: "";
   display: table; }
 
-#text {
-  font-size: 1em !important;
-  font-family: georgia, serif !important;
-  color: rgba(0, 0, 0, 0.6) !important;
-  width: 50% !important;
-  padding: 70px 25% 0;
-  height: 100% !important;
-  position: fixed !important;
-  border: none !important;
-  margin: 0 !important;
-  box-shadow: none !important;
-  box-shadow: none !important;
-  border-radius: none !important;
-  focus-outline: none !important;
-  focus-box-shadow: none !important;
-  outline: none !important; }
+html {
+  box-sizing: border-box; }
+
+*, *:before, *:after {
+  box-sizing: inherit; }
+
+#wrapper {
+  margin: 0 auto; }
 
 #navigation {
-  width: 50% !important;
+  max-width: 1600px;
   margin: 0 auto;
-  padding-top: 8px;
-  margin-bottom: 35px;
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  background: rgba(255, 255, 255, 0.8);
-  z-index: 2; }
+  padding: 10px 20px 20px 20px;
+  background-color: rgba(255, 255, 255, 0.8); }
   #navigation::after {
     clear: both;
     content: "";
     display: table; }
+  @media (min-width: 800px) {
+    #navigation {
+      padding: 10px 80px 20px 80px; } }
 
 .icon {
   font-size: 12px;
@@ -91,9 +80,8 @@ table {
   padding-top: 9px; }
 
 #tabs {
-  display: inline-block;
-  padding-left: 30px;
-  padding-top: 2px;
+  float: left;
+  width: 80%;
   -webkit-user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -102,11 +90,14 @@ table {
     clear: both;
     content: "";
     display: table; }
+  @media (min-width: 800px) {
+    #tabs {
+      width: 90%; } }
 
 .tab {
-  position: relative;
   display: inline-block;
   padding: 8px 14px;
+  margin-bottom: 10px;
   margin-right: 10px;
   background: rgba(0, 0, 0, 0.03);
   color: rgba(0, 0, 0, 0.3);
@@ -121,14 +112,22 @@ table {
 .tab.sortable-ghost {
   opacity: .3; }
 
+#actions {
+  float: left;
+  width: 20%;
+  text-align: right; }
+  @media (min-width: 800px) {
+    #actions {
+      width: 10%; } }
+
 #add {
   display: inline-block;
-  float: left;
   fill: rgba(0, 0, 0, 0.25);
   -webkit-user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;
   -ms-user-select: none;
+  padding-right: 10px;
   transition: fill 0.3s; }
   #add:hover {
     fill: rgba(0, 0, 0, 0.65);
@@ -136,7 +135,6 @@ table {
 
 #remove {
   display: inline-block;
-  float: right;
   fill: rgba(0, 0, 0, 0.25);
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -146,3 +144,31 @@ table {
   #remove:hover {
     fill: rgba(0, 0, 0, 0.65);
     transition: fill 0.3s; }
+
+html, body, #wrapper, #text {
+  height: 100%; }
+
+#text {
+  font-size: 1em;
+  font-family: georgia, serif;
+  color: rgba(0, 0, 0, 0.6);
+  width: 100%;
+  padding: 0 20px 50px 20px;
+  min-height: 100%;
+  margin: 0 auto;
+  max-width: 1600px;
+  display: block;
+  border: none;
+  box-shadow: none;
+  focus-outline: none;
+  focus-box-shadow: none;
+  outline: none; }
+  @media (min-width: 800px) {
+    #text {
+      padding: 0 80px 50px 80px; } }
+
+#text::-webkit-scrollbar {
+  width: 0 !important; }
+
+#text {
+  overflow: -moz-scrollbars-none; }
