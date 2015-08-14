@@ -56,7 +56,7 @@ var keyboardjs = require('keyboardjs');
       });
 
       // Switch tab right.
-      keyboardjs.bind('command+right', (e) => {
+      keyboardjs.bind('command+shift+right', (e) => {
         var state, index, $tab;
         e.preventDefault();
         state = this.getState();
@@ -66,7 +66,7 @@ var keyboardjs = require('keyboardjs');
       });
 
       // Switch tab left.
-      keyboardjs.bind('command+left', (e) => {
+      keyboardjs.bind('command+shift+left', (e) => {
         var state, index, $tab;
         e.preventDefault();
         state = this.getState();

@@ -852,7 +852,7 @@
           });
 
           // Switch tab right.
-          keyboardjs.bind('command+right', function (e) {
+          keyboardjs.bind('command+shift+right', function (e) {
             var state, index, $tab;
             e.preventDefault();
             state = _this2.getState();
@@ -862,7 +862,7 @@
           });
 
           // Switch tab left.
-          keyboardjs.bind('command+left', function (e) {
+          keyboardjs.bind('command+shift+left', function (e) {
             var state, index, $tab;
             e.preventDefault();
             state = _this2.getState();
