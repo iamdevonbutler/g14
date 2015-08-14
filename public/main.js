@@ -807,7 +807,6 @@
           this.$tabs = $('#tabs');
           this.$add = $('#add');
           this.$remove = $('#remove');
-          this.$activeTab = {};
         },
 
         bindEvents: function bindEvents() {
@@ -1024,6 +1023,8 @@
           try {
             stringedState = JSON.stringify(state);
             localStorage.setItem(key, stringedState);
+            // Clear cached state.
+            this.__state = null;
           } catch (err) {
             alert('Something went down when trying to save your stuff');
             console.log(err);
@@ -1035,12 +1036,18 @@
           var key = arguments.length <= 0 || arguments[0] === undefined ? 'content' : arguments[0];
 
           var state;
+          // If stae is cacehed.
+          if (this.__state) {
+            return this.__state;
+          }
           try {
             state = localStorage.getItem(key);
             state = JSON.parse(state);
             // Normalize state from an object to array if exists.
             // For compatibility reasons.
             state = $.isPlainObject(state) ? this.normalizeLegacyState(state) : state;
+            // Cache state.
+            this.__state = state;
             return state;
           } catch (err) {
             alert('Something went down when trying to get your stuff');
@@ -1156,6 +1163,10 @@
             alert('Your browser does not support localStorage and thus cannot function in this application.');
             return false;
           }
+
+          // Init properties.
+          this.$activeTab = {};
+          this.__state = null;
 
           // Cache DOM elements.
           this.cache();
