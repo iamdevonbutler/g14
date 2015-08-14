@@ -1,4 +1,27 @@
 
+0.5.0 / 2015-08-14
+==================
+
+  * built site
+  * added state static caching
+  * styling enhancements
+  * changed keyboard shorcuts
+  * completed tab dragging functionality
+  * fixed add/remove tab bugs
+  * refactored js to work w/ array type state for tab dragging
+  * misc tab styling and initalized draggable tabs - need to wire up the backend to coordinate data
+  * added localstorage feature detection.
+  * removed localstorage lib and did it inhouse. fixed vital error where the wrong ID was being used to listen to changes
+  * update browser requirements
+  * added bourbon
+  * added focus on tabchange
+  * updated history
+  * fixed tab formating issue. partiall fixed tab switching
+  * updated nav bg
+  * added cname
+  * build site
+  * styling enhancements
+
 0.4.1 / 2015-08-12
 ==================
 
