@@ -106,7 +106,9 @@ var keyboardjs = require('keyboardjs');
         state[newIndex].active = true;
         this.setState(state);
         this.updateActiveTabDOMAttr(newIndex);
-        this.insertText(state[newIndex].text);
+        setTimeout(() => {
+          this.insertText(state[newIndex].text);
+        }, 0);
         this.cacheActiveTab($tab);
       }
     },
