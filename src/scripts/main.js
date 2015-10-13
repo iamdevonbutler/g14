@@ -55,24 +55,24 @@ var keyboardjs = require('keyboardjs');
       });
 
       // Switch tab right.
-      keyboardjs.bind('command+shift+right', (e) => {
-        var state, index, $tab;
-        e.preventDefault();
-        state = this.getState();
-        index = this.getAdjacentTabIndex(state, true);
-        $tab = this.getTabElementByIndex(index);
-        this.changeTab($tab);
-      });
-
-      // Switch tab left.
-      keyboardjs.bind('command+shift+left', (e) => {
-        var state, index, $tab;
-        e.preventDefault();
-        state = this.getState();
-        index = this.getAdjacentTabIndex(state, false);
-        $tab = this.getTabElementByIndex(index);
-        this.changeTab($tab);
-      });
+      // keyboardjs.bind('command+shift+right', (e) => {
+      //   var state, index, $tab;
+      //   e.preventDefault();
+      //   state = this.getState();
+      //   index = this.getAdjacentTabIndex(state, true);
+      //   $tab = this.getTabElementByIndex(index);
+      //   this.changeTab($tab);
+      // });
+      //
+      // // Switch tab left.
+      // keyboardjs.bind('command+shift+left', (e) => {
+      //   var state, index, $tab;
+      //   e.preventDefault();
+      //   state = this.getState();
+      //   index = this.getAdjacentTabIndex(state, false);
+      //   $tab = this.getTabElementByIndex(index);
+      //   this.changeTab($tab);
+      // });
 
       // Remove tab.
       keyboardjs.bind('command+d', (e) => {
