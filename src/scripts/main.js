@@ -2,6 +2,21 @@
 
 var keyboardjs = require('keyboardjs');
 
+function download(filename, text) {
+  var pom = document.createElement('a');
+  pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+  pom.setAttribute('download', filename);
+
+  if (document.createEvent) {
+    var event = document.createEvent('MouseEvents');
+    event.initEvent('click', true, true);
+    pom.dispatchEvent(event);
+  }
+  else {
+    pom.click();
+  }
+}
+
 ;(function($, window, document, localstorage, Modernizr, Sortable, keyboardjs, undefined) {
 
   var main = {
@@ -13,6 +28,7 @@ var keyboardjs = require('keyboardjs');
       this.$tabs = $('#tabs');
       this.$add = $('#add');
       this.$remove = $('#remove');
+      this.$download = $('#download');
     },
 
     bindEvents() {
@@ -47,6 +63,12 @@ var keyboardjs = require('keyboardjs');
           this.removeTab();
         }
       });
+
+      // Listen for remove tab click.
+      this.$download.on('click', (e) => {
+        download('a.txt', 'aa.tetx');
+      });
+
 
       // Listen for change tab events.
       this.$tabs.on('click', 'li', (e, target) => {

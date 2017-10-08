@@ -92,9 +92,6 @@ html {
   float: left;
   width: 20%;
   text-align: right;
-  @media (min-width: 800px) {
-    width: 10%;
-  }
 }
 
 #add {
@@ -110,6 +107,21 @@ html {
 }
 
 #remove {
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  fill: rgba(0,0,0,.25);
+  @include userselect(none);
+  @include transition(fill $transitiontime);
+  &:hover {
+    fill: rgba(0,0,0,.65);
+    @include transition(fill $transitiontime);
+  }
+}
+
+#download {
+  height: 30px;
+  width: 30px;
   display: inline-block;
   fill: rgba(0,0,0,.25);
   @include userselect(none);

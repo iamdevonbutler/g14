@@ -1,3 +1,9 @@
 Just a reminder:
 
+git is configured to push to 2 origins (master, gh-pages)
+
+all you need to do is git push
+
+---
+
 git subtree push --prefix public origin gh-pages
