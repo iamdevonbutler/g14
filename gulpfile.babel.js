@@ -58,10 +58,10 @@ gulp.task('html', function() {
     .pipe(connect.reload());
 });
 
-// gulp.task('assets', function() {
+gulp.task('assets', function() {
 //   gulp.src("CNAME")
 //     .pipe(gulp.dest('gh-pages'))
-// });
+});
 
 gulp.task('connect', function() {
   connect.server({
