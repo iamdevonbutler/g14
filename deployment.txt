@@ -1,9 +1,8 @@
-Just a reminder:
+Just a reminder (to deploy):
 
-git is configured to push to 2 origins (master, gh-pages)
-
-all you need to do is git push
+git subtree push --prefix gh-pages origin gh-pages
 
 ---
 
-git subtree push --prefix public origin gh-pages
+for custom domain
+make sure we uncomment out the 'assets' gulp task to move CNAME into dist

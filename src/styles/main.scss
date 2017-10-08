@@ -48,22 +48,11 @@ html {
   }
 }
 
-.icon {
-  font-size: 12px;
-  width: 20px;
-  display: inline-block;
-  float: left;
-  padding-top: 9px;
-}
-
 #tabs {
   float: left;
-  width: 80%;
+  width: 85%;
   @include userselect(none);
   @include clearfix();
-  @media (min-width: 800px) {
-    width: 90%;
-  }
 }
 
 .tab {
@@ -73,10 +62,10 @@ html {
   margin-right: 10px;
   background: rgba(0,0,0,.03);
   color: rgba(0,0,0,.30);
-  @include transition(all $transitiontime);
+  transition: all $transitiontime;
   &:hover {
     color: rgba(0,0,0,.7);
-    @include transition(all $transitiontime);
+    transition: all $transitiontime;
   }
 }
 
@@ -84,51 +73,61 @@ html {
   color: rgba(0,0,0,.85);
 }
 
-.tab.sortable-ghost {
-  opacity: .3;
-}
-
 #actions {
   float: left;
-  width: 20%;
+  width: 15%;
   text-align: right;
+  > * {
+    height: 30px;
+    width: 30px;
+  }
+}
+
+.icon {
+  font-size: 12px;
+  width: 20px;
+  display: inline-block;
+  float: left;
 }
 
 #add {
   display: inline-block;
   fill: rgba(0,0,0,.25);
+  padding-top: 9px;
   @include userselect(none);
-  padding-right: 10px;
-  @include transition(fill $transitiontime);
+  transition: fill $transitiontime;
   &:hover {
     fill: rgba(0,0,0,.65);
-    @include transition(fill $transitiontime);
+    transition: fill $transitiontime;
   }
 }
 
 #remove {
-  height: 30px;
-  width: 30px;
   display: inline-block;
   fill: rgba(0,0,0,.25);
+  padding-top: 9px;
+  margin-left: -2px;
   @include userselect(none);
-  @include transition(fill $transitiontime);
+  transition: fill $transitiontime;
   &:hover {
     fill: rgba(0,0,0,.65);
-    @include transition(fill $transitiontime);
+    transition: fill $transitiontime;
   }
 }
 
 #download {
-  height: 30px;
-  width: 30px;
   display: inline-block;
   fill: rgba(0,0,0,.25);
   @include userselect(none);
-  @include transition(fill $transitiontime);
+  margin-left: -5px;
+  transition: fill $transitiontime;
   &:hover {
     fill: rgba(0,0,0,.65);
-    @include transition(fill $transitiontime);
+    transition: fill $transitiontime;
+  }
+  svg {
+    padding-top: 5px;
+    width: 29px;
   }
 }
 

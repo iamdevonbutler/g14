@@ -1,5 +1,3 @@
-'use strict';
-
 var keyboardjs = require('keyboardjs');
 
 function download(filename, text) {
@@ -19,7 +17,7 @@ function download(filename, text) {
 
 ;(function($, window, document, localstorage, Modernizr, Sortable, keyboardjs, undefined) {
 
-  var main = {
+  var obj = {
 
     cache() {
       this.$window = $(window);
@@ -32,6 +30,11 @@ function download(filename, text) {
     },
 
     bindEvents() {
+      // Download localStorage.
+      this.$download.on('click', () => {
+        download('g14.backup.txt', localStorage.content);
+      });
+
       // Track and save content.
       this.$document.on('keyup', '#text', () => {
         var state, key, text;
@@ -63,12 +66,6 @@ function download(filename, text) {
           this.removeTab();
         }
       });
-
-      // Listen for remove tab click.
-      this.$download.on('click', (e) => {
-        download('a.txt', 'aa.tetx');
-      });
-
 
       // Listen for change tab events.
       this.$tabs.on('click', 'li', (e, target) => {
@@ -308,7 +305,7 @@ function download(filename, text) {
 
     // Select tab from DOM. return jQuery element
     getTabElementByIndex(index) {
-      return this.$tabs.find('[data-tab-order="'+index+'"]')
+      return this.$tabs.find('[data-tab-order="'+index+'"]');
     },
 
     changeObjInArrayValue(array, field, value) {
@@ -326,6 +323,7 @@ function download(filename, text) {
     },
 
     initTabSorting() {
+      console.log(Sortable);
       Sortable.create(this.$tabs[0], {
         animation: 300,
         onUpdate: evt => {
@@ -350,7 +348,7 @@ function download(filename, text) {
             }
             // If the item was not moved at all.
             else {
-               array[index] = obj
+               array[index] = obj;
             }
           });
           this.setState(array);
@@ -403,6 +401,7 @@ function download(filename, text) {
         tabIndex = $el.attr('data-tab-order');
         this.setTabName($el, state[tabIndex].text);
       });
+      console.log(3);
       this.initTabSorting();
 
       this.cacheActiveTab();
@@ -416,7 +415,7 @@ function download(filename, text) {
   };
 
   $(document).ready(() => {
-    main.init();
+    obj.init();
   });
 
 })(jQuery, window, document, localStorage, Modernizr, Sortable, keyboardjs);

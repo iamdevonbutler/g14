@@ -15,7 +15,7 @@ var argv = require('yargs').argv;
 var bourbon = require('node-bourbon');
 
 function onError(err) {
-  console.log(err);
+  console.error(err);
   this.emit('end');
 }
 
@@ -30,7 +30,7 @@ gulp.task('scripts', function() {
     .pipe(concat('main.js'))
     .pipe(babel())
     .pipe( gulpif(isForProd, uglify()) )
-    .pipe(gulp.dest('public'))
+    .pipe(gulp.dest('gh-pages'))
     .pipe(connect.reload());
 });
 
@@ -41,12 +41,12 @@ gulp.task('styles', function() {
     }))
     .on('error', onError)
     .pipe(autoprefixer({
-        browsers: ['last 2 versions'],
-        cascade: false
+      browsers: ['last 2 versions'],
+      cascade: false
     }))
     .pipe( gulpif(isForProd, minifyCSS()) )
     .pipe(concat('main.css'))
-    .pipe(gulp.dest('public'))
+    .pipe(gulp.dest('gh-pages'))
     .pipe(connect.reload());
 });
 
@@ -54,24 +54,24 @@ gulp.task('html', function() {
   gulp.src("src/*.html")
     .pipe(gulpif(!isForProd(),embedlr()))
     // .pipe(embedlr())
-    .pipe(gulp.dest('public'))
+    .pipe(gulp.dest('gh-pages'))
     .pipe(connect.reload());
 });
 
-gulp.task('assets', function() {
-  gulp.src("CNAME")
-    .pipe(gulp.dest('public'))
-});
+// gulp.task('assets', function() {
+//   gulp.src("CNAME")
+//     .pipe(gulp.dest('gh-pages'))
+// });
 
 gulp.task('connect', function() {
   connect.server({
-    root: 'public',
+    root: 'gh-pages',
     livereload: true
   });
 });
 
 gulp.task('clean', function () {
-  return gulp.src('public/*', {read: false})
+  return gulp.src('gh-pages/*', {read: false})
     .pipe(clean());
 });
 

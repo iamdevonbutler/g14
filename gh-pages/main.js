@@ -830,8 +830,6 @@
       locale.setKillKey('command');
     };
   }, {}], 6: [function (require, module, exports) {
-    'use strict';
-
     var keyboardjs = require('keyboardjs');
 
     function download(filename, text) {
@@ -850,7 +848,7 @@
 
     ;(function ($, window, document, localstorage, Modernizr, Sortable, keyboardjs, undefined) {
 
-      var main = {
+      var obj = {
 
         cache: function cache() {
           this.$window = $(window);
@@ -864,6 +862,11 @@
 
         bindEvents: function bindEvents() {
           var _this2 = this;
+
+          // Download localStorage.
+          this.$download.on('click', function () {
+            download('g14.backup.txt', localStorage.content);
+          });
 
           // Track and save content.
           this.$document.on('keyup', '#text', function () {
@@ -895,11 +898,6 @@
             if (_this2.confirmTabRemoval()) {
               _this2.removeTab();
             }
-          });
-
-          // Listen for remove tab click.
-          this.$download.on('click', function (e) {
-            download('a.txt', 'aa.tetx');
           });
 
           // Listen for change tab events.
@@ -1166,6 +1164,7 @@
         initTabSorting: function initTabSorting() {
           var _this5 = this;
 
+          console.log(Sortable);
           Sortable.create(this.$tabs[0], {
             animation: 300,
             onUpdate: function onUpdate(evt) {
@@ -1249,6 +1248,7 @@
             tabIndex = $el.attr('data-tab-order');
             _this6.setTabName($el, state[tabIndex].text);
           });
+          console.log(3);
           this.initTabSorting();
 
           this.cacheActiveTab();
@@ -1262,7 +1262,7 @@
       };
 
       $(document).ready(function () {
-        main.init();
+        obj.init();
       });
     })(jQuery, window, document, localStorage, Modernizr, Sortable, keyboardjs);
   }, { "keyboardjs": 1 }] }, {}, [6]);
